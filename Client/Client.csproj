@@ -42,8 +42,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Infrastructure.Client\Infrastructure.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
@@ -61,6 +59,13 @@
     <EmbeddedResource Update="Resources\Pages\Factories\Factory.ru.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Analytics\WorkingTime.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Authentication\ConfirmValidRegistration.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Authentication\Login.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Authentication\Register.razor" />
   </ItemGroup>
 
 </Project>
