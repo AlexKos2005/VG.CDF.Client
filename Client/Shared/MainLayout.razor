@@ -1,0 +1,63 @@
+﻿@page "/"
+
+@using MudBlazor
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+
+<MudRTLProvider RightToLeft="@_rightToLeft">
+    <MudThemeProvider Theme="_currentTheme" />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+    <AuthorizeView>
+        <NotAuthorized>
+            <MudAppBar Elevation="4" Color="MudBlazor.Color.Primary">
+                <MudSpacer />
+                <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="MudBlazor.Color.Inherit" OnClick="@((e) => DarkMode())" />
+            </MudAppBar>
+            <MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center" Style="height: 100vh;">
+                <MudPaper Elevation="25" Class="pa-8" Style="width: 500px;">
+                    @Body
+                </MudPaper>
+            </MudContainer>
+        </NotAuthorized>
+        <Authorized>
+            <MudLayout>
+                <MainBody OnDarkModeToggle="@DarkMode" OnRightToLeftToggle="@RightToLeftToggle">
+                    @Body
+                </MainBody>
+            </MudLayout>
+        </Authorized>
+    </AuthorizeView>
+</MudRTLProvider>
+
+@*<div class="page">
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+
+        <div class="main">
+            <div class="top-row px-4">
+                <AuthorizeView>
+                    <Authorized>
+                       @Body
+                    </Authorized>
+                    <NotAuthorized>
+                        <a href="/login">Login</a>
+                    </NotAuthorized>
+                </AuthorizeView>
+
+            </div>
+        </div>
+    </div>*@
+
+
+@code {
+    //public async Task Logout()
+    //{
+    //    await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLogout();
+
+    //    NavigationManager.NavigateTo("/");
+    //}
+}

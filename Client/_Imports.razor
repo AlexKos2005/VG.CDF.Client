@@ -1,0 +1,31 @@
+﻿@using System.Net.Http
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using BreadCommunityWeb.Blz.Client.Shared
+@using BreadCommunityWeb.Blz.Client.Pages.Authentication
+@using MudBlazor
+@using Blazored.LocalStorage
+@using Blazored.FluentValidation
+@using Microsoft.Extensions.Localization
+@using BreadCommunityWeb.Blz.Client.ViewModels
+@using BreadCommunityWeb.Blz.Client.Models
+@using BreadCommunityWeb.Blz.Infrastructure.Client.Services.RestApi
+@using ChartJs.Blazor
+@using Blazorise
+@using Blazorise.Charts
+
+
+@attribute [Authorize]
+@inject NavigationManager _navigationManager
+@inject IAuthorizationService _authorizationService
+@inject AuthenticationStateProvider _authorizationService
+@inject IDialogService _dialogService
+@inject HttpClient _httpClient
+@inject IJSRuntime _jsRuntime
+@inject ISnackbar _snackBar
+@inject ILocalStorageService _localStorage

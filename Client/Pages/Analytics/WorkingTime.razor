@@ -1,0 +1,132 @@
+﻿@using Microsoft.Extensions.Localization
+@using MudBlazor
+
+@page "/analytics/workingtime/{factoryid}"
+@inject IJSRuntime _jsRuntime
+@inject HttpClient _httpClient
+
+<div style="text-align:center">
+    <h2>Аналитика</h2>
+</div>
+
+
+
+@*<MudGrid>
+    <MudItem xs="12" sm="6" md="4">
+        <MudDatePicker Label="Only Calendar" @bind-Date="@StartReportDate" DisableToolbar="true" />
+    </MudItem>
+    <MudItem xs="12" sm="6" md="4">
+        <MudDatePicker Label="Only Calendar" @bind-Date="@EndReportDate" DisableToolbar="true" />
+    </MudItem>
+    <MudGrid>
+    <MudItem xs="12" sm="6" md="4">
+        <MudSelect Label=Устройства T="string" Value="CurrentDevice.DeviceDescriptions[0].Description" TextChanged="((string tt)=> ChangeDevice(tt))">
+            @foreach (var device in Devices)
+            {
+                <MudSelectItem T="string" Value="@device.ExternalId.ToString()">@device.DeviceDescriptions[0].Description.ToString()</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+</MudGrid>
+    <MudItem xs="12" sm="6" md="4">
+        <MudFab Icon="@Icons.Material.Filled.Save" aria-label="save" OnClick="(()=>BuildWorkTimeCharts(default))" />
+    </MudItem>
+</MudGrid>*@
+
+    <div style="width:100%;text-align:center;">
+       <div style="display: inline-block;"><MudDatePicker Label="Only Calendar" @bind-Date="@StartReportDate" DisableToolbar="true" /></div>
+        <div style="display: inline-block;"><MudDatePicker Label="Only Calendar" @bind-Date="@EndReportDate" DisableToolbar="true" /></div>
+         <div style="display: inline-block;"><MudSelect Label=Устройства T="string" Value="CurrentDevice.DeviceDescriptions[0].Description" TextChanged="((string tt)=> ChangeDevice(tt))">
+            @foreach (var device in Devices)
+            {
+                <MudSelectItem T="string" Value="@device.ExternalId.ToString()">@device.DeviceDescriptions[0].Description.ToString()</MudSelectItem>
+            }
+        </MudSelect></div>
+    </div>
+
+<br />
+<br />
+<br />
+<br />
+
+<div style="width:100%;text-align:center;font-family:'Book Antiqua'">
+    <table border="1" style="display: inline-block;">
+        <caption style="font-size:large">Подача в трассу</caption>
+    <tr>
+    <th>Название</th>
+    <th>Редуктор</th>
+    <th>Обороты, мин</th>
+    </tr>
+    <tr>
+    <td> <div style="display: inline-block;font-size:medium">@EquipmentInfo.FeederName</div>  </td>
+    <td><div style="display: inline-block;font-size:medium">@EquipmentInfo.FeederReducer</div> </td>
+    <td><div style="display: inline-block;font-size:medium">@EquipmentInfo.FeederRevPerMinute</div> </td>
+   </tr>
+  </table>
+</div>
+<br />
+<div style="width:100%;text-align:center;font-family:'Book Antiqua'">
+    <table border="1" style="display: inline-block;">
+        <caption style="font-size:large">Воздуходувка</caption>
+    <tr>
+    <th>Название</th>
+    <th>Мощность,кВт</th>
+    <th>Рабочее давление, МПа</th>
+    <th>Производительность, т/ч</th>
+    </tr>
+    <tr>
+    <td> <div style="display: inline-block;font-size:medium">@EquipmentInfo.CompressorName</div>  </td>
+    <td><div style="display: inline-block;font-size:medium">@EquipmentInfo.CompressorPower</div> </td>
+    <td><div style="display: inline-block;font-size:medium">@EquipmentInfo.CompressorWorkPressure</div> </td>
+    <td> <div style="display: inline-block;font-size:medium">@EquipmentInfo.CompressorProductivity</div> </td>
+   </tr>
+  </table>
+</div>
+@*<div style="width:100%;text-align:center;font-family:'Book Antiqua'">
+    <div style="display: inline-block;font-size:medium">@EquipmentInfo.FeederName</div>
+    <div style="display: inline-block;font-size:medium">@EquipmentInfo.FeederReducer</div>
+    <div style="display: inline-block;font-size:medium">@EquipmentInfo.FeederRevPerMinute</div>
+</div>*@
+
+<br />
+<br />
+
+  <div style="text-align:center;">
+        <LineChart Style="width:80%; margin-right: auto;margin-left: auto;display: block;" @ref="TimeLineChart" TItem="double" />
+    </div> 
+
+<br />
+<br />
+<br />
+
+<div style="text-align:center">
+        <LineChart Style="width:80%; margin-right: auto;margin-left: auto;display: block;" @ref="PressureLineChart" TItem="double" />
+</div>  
+
+
+ 
+
+
+@*<div>
+    <MudElement HtmlTag="@htmlTag">
+    Средний процент чистого времени работы за период <code style="color:red;">@ClearTimeAvaregePercent</code>%
+    </MudElement>
+    <MudElement HtmlTag="@htmlTag">
+    Средний процент остановок по давлению за период <code style="color:red;">@StopByPressureTimeAvaregePercent</code>%
+    </MudElement>
+    <MudChart ChartType="ChartType.Line" ChartSeries="@WorkTimeSeries" @bind-SelectedIndex="Index" XAxisLabels="@DatesRange" Width="100%" Height="350px"></MudChart>
+</div>
+
+<br/>
+<br/>
+<br/>
+
+<div>
+    <MudChart ChartType="ChartType.Line" ChartSeries="@PressureSeries" @bind-SelectedIndex="Index" XAxisLabels="@DatesRange" Width="100%" Height="350px"></MudChart>
+</div>*@
+
+
+@code {
+    private string htmlTag="h1";
+    private int Index = 0; //default value cannot be 0 -> first selectedindex is 0.
+}

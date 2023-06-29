@@ -1,0 +1,30 @@
+﻿@using BreadCommunityWeb.Blz.Client.Models
+
+@page "/register"
+@layout MainLayout
+@attribute [AllowAnonymous]
+<h3>@Localizer["Registration"].Value</h3>
+
+
+<EditForm Model="@RegData" OnValidSubmit="@RegistAsync">
+    <FluentValidationValidator @ref="_fluentValidationValidator" />
+    <MudGrid>
+        <MudItem xs="12">
+            <MudTextField T="string" Label=@Localizer["Enter E-mail"].Value Variant="Variant.Outlined" @bind-Value="RegData.UserEmail" For="@(() => RegData.UserEmail)" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField Label=@Localizer["Enter Password"].Value Variant="Variant.Outlined" @bind-Value="RegData.Password" For="@(() => RegData.Password)" InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField Label=@Localizer["Confirm password"].Value Variant="Variant.Outlined" @bind-Value="RegData.ConfirmPassword" For="@(() => RegData.ConfirmPassword)" InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
+        </MudItem>
+       @* <MudItem xs="12" Class="d-flex justify-space-between align-center">
+            <MudCheckBox T="bool" Label="Remember me?" Color="Color.Primary" Class="ml-n1"></MudCheckBox> <MudLink Href="/account/forgot-password">"Forgot password?"</MudLink>
+        </MudItem>*@
+        <MudItem xs="12" Class="d-flex justify-center">
+            <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Disabled="@(!Validated)" Color="MudBlazor.Color.Primary" Size="MudBlazor.Size.Large" Style="width: 100%;">@Localizer["To Regist"].Value</MudButton>
+        </MudItem>
+        @*<MudAlert Severity="Severity.Error">@MudAlert</MudAlert>*@
+    </MudGrid>
+</EditForm>
+
