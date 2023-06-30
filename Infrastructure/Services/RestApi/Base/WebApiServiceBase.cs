@@ -6,7 +6,7 @@ using VG.CDF.Client.Application.Dto;
 using VG.CDF.Client.Application.Interfaces.Services.RestApi;
 using VG.CDF.Client.Application.Wrappers;
 
-namespace VG.CDF.Client.Infrastructure.Services.RestApi;
+namespace VG.CDF.Client.Infrastructure.Services.RestApi.Base;
 
 public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBaseDto
 {
@@ -18,7 +18,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
         _urn = urn;
     }
     
-    public async Task<IEnumerable<T>> GetList<T>(T entity)
+    public async Task<IEnumerable<T>> GetList<Tg>(Tg entity)
     {
         var result = await _crudService.Get<IEnumerable<T>>(_urn,entity);
 
@@ -30,7 +30,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
         return result.ResultContent;
     }
 
-    public async Task<T?> Create<T>(T entity)
+    public async Task<T> Create<Tc>(Tc entity)
     {
         var result = await _crudService.Post<T>(_urn,entity);
 
@@ -42,7 +42,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
         return result.ResultContent;
     }
 
-    public async Task<T> Update<T>(T entity)
+    public async Task<T> Update<Tu>(Tu entity)
     {
         var result = await _crudService.Update<T>(_urn,entity);
 
@@ -54,7 +54,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
         return result.ResultContent;
     }
 
-    public async Task<bool> Delete(T entity)
+    public async Task<bool> Delete<Td>(Td entity)
     {
         var result = await _crudService.Delete(_urn,entity);
 

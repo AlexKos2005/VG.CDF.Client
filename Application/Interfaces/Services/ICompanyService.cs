@@ -3,7 +3,7 @@ using VG.CDF.Client.Application.Interfaces.Services.RestApi;
 
 namespace VG.CDF.Client.Application.Interfaces.Services;
 
-public interface ICompanyService : ICrudService<CompanyDto>
+public interface ICompanyService : IWebApiService<CompanyDto>
 {
     
 }

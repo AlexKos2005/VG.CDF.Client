@@ -7,11 +7,11 @@ namespace VG.CDF.Client.Application.Interfaces.Services.RestApi;
 
 public interface IWebApiService<T> where T: EntityBaseDto
 {
-    Task<IEnumerable<T>> GetList<T>(T entity);
+    Task<IEnumerable<T>> GetList<Tg>(Tg entity);
     
-    Task<T?> Create<T>(T entity);
+    Task<T> Create<Tc>(Tc entity);
     
-    Task<T> Update<T>(T entity);
+    Task<T> Update<Tu>(Tu entity);
     
-    Task<bool> Delete(T entity);
+    Task<bool> Delete<Td>(Td entity);
 }

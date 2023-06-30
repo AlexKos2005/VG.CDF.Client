@@ -9,7 +9,7 @@ using VG.CDF.Client.Application.Interfaces.Services.RestApi;
 using VG.CDF.Client.Application.Wrappers;
 using VG.CDF.Client.Infrastructure.Extentions;
 
-namespace VG.CDF.Client.Infrastructure.Services.RestApi;
+namespace VG.CDF.Client.Infrastructure.Services.RestApi.Base;
 
 public abstract class CrudServiceBase<T>: ICrudService<T>
 {
@@ -26,17 +26,9 @@ public abstract class CrudServiceBase<T>: ICrudService<T>
     
     public virtual async Task<Result<T>> Get<T>(string urn,object content)
     {
-        // create request object
-        var request = new HttpRequestMessage(HttpMethod.Get, urn);
-
-        // set request body
-        request.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
-
+        var request = new HttpRequestMessage(HttpMethod.Get, content.GetQuery(urn));
         var jwt = await _localStorage.GetItemAsStringAsync("authToken");
-        // add authorization header
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
-
-        // send request
         var response = await _httpClient.SendAsync(request);
 
         return await response.GetFromHttpRespone<T>();
@@ -44,17 +36,10 @@ public abstract class CrudServiceBase<T>: ICrudService<T>
 
     public virtual async Task<Result<T>> Post<T>(string urn,object content)
     {
-        // create request object
         var request = new HttpRequestMessage(HttpMethod.Post, urn);
-
-        // set request body
         request.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
-
         var jwt = await _localStorage.GetItemAsStringAsync("authToken");
-        // add authorization header
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
-
-        // send request
         var response = await _httpClient.SendAsync(request);
 
         return await response.GetFromHttpRespone<T>();
@@ -62,17 +47,10 @@ public abstract class CrudServiceBase<T>: ICrudService<T>
 
     public virtual async Task<Result<T>> Update<T>(string urn,object content)
     {
-        // create request object
         var request = new HttpRequestMessage(HttpMethod.Put, urn);
-
-        // set request body
         request.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
-
         var jwt = await _localStorage.GetItemAsStringAsync("authToken");
-        // add authorization header
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
-
-        // send request
         var response = await _httpClient.SendAsync(request);
 
         return await response.GetFromHttpRespone<T>();
@@ -80,17 +58,9 @@ public abstract class CrudServiceBase<T>: ICrudService<T>
 
     public virtual async Task<Result> Delete(string urn,object content)
     {
-        // create request object
-        var request = new HttpRequestMessage(HttpMethod.Delete, urn);
-
-        // set request body
-        request.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
-
+        var request = new HttpRequestMessage(HttpMethod.Delete, content.GetQuery(urn));
         var jwt = await _localStorage.GetItemAsStringAsync("authToken");
-        // add authorization header
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
-
-        // send request
         var response = await _httpClient.SendAsync(request);
 
         return response.GetFromHttpRespone();
