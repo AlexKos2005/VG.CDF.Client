@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VG.CDF.Client.Application.Interfaces.Services;
 using VG.CDF.Client.Client.Models;
 using VG.CDF.Client.Dto.Authentication;
 using VG.CDF.Client.Interfaces.Services.RestApi;
@@ -18,9 +17,6 @@ namespace VG.CDF.Client.Pages.Authentication
 
         private bool _passwordVisibility;
 
-        [Inject] 
-        protected IUserService _userService { get; set; }
-        
         [Inject] 
         protected IRegisterRestApiService RegisterRestApiService { get; set; }
 
@@ -67,11 +63,11 @@ namespace VG.CDF.Client.Pages.Authentication
 
         public async Task RegistAsync()
         {
-            /*var userRegistration = new UserRegistrationRequestDto();
+            var userRegistration = new UserRegistrationRequestDto();
             userRegistration.Email = RegData.UserEmail;
             userRegistration.Password = RegData.Password;
             await RegisterRestApiService.Register(userRegistration);
-            NavigationManager.NavigateTo("/validregistration");*/
+            NavigationManager.NavigateTo("/validregistration");
         }
 
     }

@@ -1,0 +1,50 @@
+﻿@using Microsoft.Extensions.Localization
+
+@page "/login"
+@layout MainLayout
+@attribute [AllowAnonymous]
+
+
+
+<EditForm Model="@LogInData" OnValidSubmit="LogInAsync">
+    <FluentValidationValidator @ref="_fluentValidationValidator" />
+    <MudGrid>
+        <MudItem xs="12">
+            <div class="d-flex justify-center">
+                @*<MudIcon Icon="@CustomIcons.BlazorHero" Color="Color.Primary" Size="Size.Large" ViewBox="0 0 500 500" Style="width: 100px; height: 100px;" />*@
+            </div>
+        </MudItem>
+        <DataAnnotationsValidator />
+        <MudItem xs="12">
+            <div class="d-flex justify-center">
+                @*<MudText Typo="Typo.h4">Volgor Cloud</MudText>*@
+            </div>
+        </MudItem>
+        <MudItem xs="12">
+            <div class="d-flex justify-center">
+                <MudText Typo="Typo.h6">@Localizer["Welcome!"].Value</MudText>
+            </div>
+        </MudItem>
+        <MudItem xs="12">
+            <div class="d-flex justify-center">
+                <MudText>@Localizer["Don't have an account?"].Value <MudLink Href="/register">@Localizer["Register here"].Value</MudLink></MudText>
+            </div>
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField T="string" Label=@Localizer["Enter E-mail"].Value Variant="Variant.Outlined"
+                          @bind-Value="LogInData.UserEmail" For="@(() => LogInData.UserEmail)" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField Label=@Localizer["Enter Password"].Value Variant="Variant.Outlined"
+                          @bind-Value="LogInData.Password" For="@(() => LogInData.Password)"
+                          InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
+        </MudItem>
+       @* <MudItem xs="12" Class="d-flex justify-space-between align-center">
+            <MudCheckBox T="bool" Label="Remember me?" Color="Color.Primary" Class="ml-n1"></MudCheckBox> <MudLink Href="/account/forgot-password">"Forgot password?"</MudLink>
+        </MudItem>*@
+        <MudItem xs="12" Class="d-flex justify-center">
+            <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Disabled="@(!Validated)" Color="MudBlazor.Color.Primary" Size="MudBlazor.Size.Large" Style="width: 100%;">@Localizer["Sign In"].Value</MudButton>
+        </MudItem>
+
+    </MudGrid>
+</EditForm>

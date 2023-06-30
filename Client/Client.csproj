@@ -62,4 +62,13 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Factories\AlarmEvents.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Factories\Factories.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Factories\Factory.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Factories\Files.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Factories\Reports.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Analytics\WorkingTime.razor" />
+  </ItemGroup>
+
 </Project>
