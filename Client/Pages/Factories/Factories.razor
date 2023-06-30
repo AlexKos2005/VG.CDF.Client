@@ -1,0 +1,68 @@
+﻿
+@page "/factories"
+@inject NavigationManager NavigationManager
+<h3>Ваши предприятия</h3>
+
+
+<MudTable Items="@UserFactories">
+    <ColGroup>
+        <col style="width:100px;" />
+        <col style="width:100px;" />
+        <col style="width:100px;" />
+        <col style="width:50px;" />
+        <col style="width:50px;" />
+    </ColGroup>
+    <RowTemplate>
+        <MudTd>@context.Description</MudTd>
+        <MudTd><MudIconButton Icon="fas fa-file-invoice" Color="MudBlazor.Color.Primary" OnClick="(()=>GoToTags(context.Id,context.Description))" Title="Статистика по параметрам">Учет</MudIconButton></MudTd>
+        <MudTd><MudIconButton Icon="fas fa-exclamation-triangle" Color="MudBlazor.Color.Error" OnClick="(()=>GoToAlarmEvents(context.Id,context.Description))" Title="Статистика по авариям">Аварийные события</MudIconButton></MudTd>
+        <MudTd><MudIconButton Icon="fas fa-chart-line" Color="MudBlazor.Color.Primary" OnClick="(()=>GoToTagsGroups(context.Id))">Аналитика</MudIconButton></MudTd>
+        <MudTd>Дата последнего отчета (МСК): @context.EnterpriseActionsInfo.LastDateTimeReportSending.AddHours(3)</MudTd>
+        <MudTd>Дата последнего подключения (МСК): @context.EnterpriseActionsInfo.LastDateTimeConnection.AddHours(3)</MudTd>
+    </RowTemplate>
+   
+</MudTable>
+
+
+
+
+
+
+
+@*<MudGrid>
+    <MudItem xs="12" sm="6" md="3">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="(()=>GoToFactory(factory.Id))">@factory.Description</MudButton>
+    </MudItem>
+</MudGrid>*@
+
+@code {
+
+    [Parameter]
+    public string Factoryid { get; set; } = "1";
+
+    protected void GoToTags(int factoryId,string name)
+    {
+        NavigationManager.NavigateTo("/factory"+"/"+ $"{factoryId}/{name}");
+    }
+
+    protected void GoToAlarmEvents(int factoryId, string name)
+    {
+        NavigationManager.NavigateTo("/alarmevents" + "/" + $"{factoryId}/{name}");
+    }
+
+     protected void GoToTagsGroups(int factoryId)
+    {
+        NavigationManager.NavigateTo("/analytics/workingtime" + "/" + $"{factoryId}");
+    }
+
+    protected override void OnInitialized()
+    {
+        //NavigationManager.NavigateTo("/factory"+"/"+Factoryid);
+    }
+
+    protected void GoToFactory(int factoryId)
+    {
+        NavigationManager.NavigateTo("/factory" + "/" + factoryId);
+    }
+
+}
