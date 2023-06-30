@@ -9,9 +9,9 @@ public interface IWebApiService<T> where T: EntityBaseDto
 {
     Task<IEnumerable<T>> GetList<Tg>(Tg entity);
     
-    Task<T> Create<Tc>(Tc entity);
+    Task<T?> Create<Tc>(Tc entity);
     
-    Task<T> Update<Tu>(Tu entity);
+    Task<T?> Update<Tu>(Tu entity);
     
     Task<bool> Delete<Td>(Td entity);
 }

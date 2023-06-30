@@ -30,7 +30,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
         return result.ResultContent;
     }
 
-    public async Task<T> Create<Tc>(Tc entity)
+    public async Task<T?> Create<Tc>(Tc entity)
     {
         var result = await _crudService.Post<T>(_urn,entity);
 
@@ -42,7 +42,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
         return result.ResultContent;
     }
 
-    public async Task<T> Update<Tu>(Tu entity)
+    public async Task<T?> Update<Tu>(Tu entity)
     {
         var result = await _crudService.Update<T>(_urn,entity);
 

@@ -7,13 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VG.CDF.Client.Application.Interfaces.Services;
+using VG.CDF.Client.Application.Users.Commands;
 using VG.CDF.Client.Client.Models;
 using VG.CDF.Client.Dto.Authentication;
 using VG.CDF.Client.Interfaces.Services.RestApi;
 
 namespace VG.CDF.Client.Pages.Authentication
 {
-    public partial class Register
+    public partial class SignUp
     {
 
         private bool _passwordVisibility;
@@ -24,7 +25,7 @@ namespace VG.CDF.Client.Pages.Authentication
         [Inject] 
         protected IRegisterRestApiService RegisterRestApiService { get; set; }
 
-        [Inject] IStringLocalizer<Register> Localizer { get; set; }
+        [Inject] IStringLocalizer<SignUp> Localizer { get; set; }
 
         [Parameter]
         public string MudAlert { get; set; } = string.Empty;
@@ -38,7 +39,7 @@ namespace VG.CDF.Client.Pages.Authentication
         [Inject]
         protected NavigationManager NavigationManager { get; set; }
 
-        public Register()
+        public SignUp()
         {
             //MudAlert = "dsfefgerg";
             RegData = new UserRegistration();
@@ -70,8 +71,18 @@ namespace VG.CDF.Client.Pages.Authentication
             /*var userRegistration = new UserRegistrationRequestDto();
             userRegistration.Email = RegData.UserEmail;
             userRegistration.Password = RegData.Password;
-            await RegisterRestApiService.Register(userRegistration);
+            await RegisterRestApiService.SignUp(userRegistration);
             NavigationManager.NavigateTo("/validregistration");*/
+
+            var signUpCommand = new CreateUserCommand() { Email = RegData.UserEmail, PasswordHash = RegData.Password };
+
+            var signUpResult = await _userService.Create(signUpCommand);
+
+            if (signUpResult != null)
+            { 
+                NavigationManager.NavigateTo("/validregistration");
+            }
+            
         }
 
     }

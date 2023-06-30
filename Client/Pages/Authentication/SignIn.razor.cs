@@ -17,7 +17,7 @@ using VG.CDF.Client.Interfaces.Services.RestApi;
 
 namespace VG.CDF.Client.Pages.Authentication
 {
-    public partial class Login
+    public partial class SignIn
     {
         private bool _passwordVisibility;
         private InputType _passwordInput = InputType.Password;
@@ -34,12 +34,12 @@ namespace VG.CDF.Client.Pages.Authentication
         [Inject]
         protected ILocalStorageService LocalStorageService { get; set; }
 
-        [Inject] IStringLocalizer<Login> Localizer { get; set; }
+        [Inject] IStringLocalizer<SignIn> Localizer { get; set; }
 
         //[Inject] IAuthenticateRestApiService AuthService { get; set; }
         public UserLogin LogInData { get; set; }
 
-        public Login()
+        public SignIn()
         {
             LogInData = new UserLogin();
         }

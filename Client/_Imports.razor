@@ -7,7 +7,7 @@
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.JSInterop
 @using VG.CDF.Client.Shared
-@using BreadCommunityWeb.Blz.Client.Pages.Authentication
+@using VG.CDF.Client.Pages.Authentication
 @using MudBlazor
 @using Blazored.LocalStorage
 @using Blazored.FluentValidation
@@ -23,7 +23,7 @@
 @attribute [Authorize]
 @inject NavigationManager _navigationManager
 @inject IAuthorizationService _authorizationService
-@inject AuthenticationStateProvider _authorizationService
+@inject AuthenticationStateProvider _authorizationState
 @inject IDialogService _dialogService
 @inject HttpClient _httpClient
 @inject IJSRuntime _jsRuntime
