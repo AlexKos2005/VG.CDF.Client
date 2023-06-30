@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
-    <RootNamespace>VG.CDF.Client.Client</RootNamespace>
-    <AssemblyName>VG.CDF.Client.Client</AssemblyName>
+    <RootNamespace>VG.CDF.Client</RootNamespace>
+    <AssemblyName>VG.CDF.Client</AssemblyName>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	<UseBlazorWebAssembly>true</UseBlazorWebAssembly>
   </PropertyGroup>
@@ -42,8 +42,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Infrastructure.Client\Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 

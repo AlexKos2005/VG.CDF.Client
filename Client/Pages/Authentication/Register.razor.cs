@@ -1,7 +1,4 @@
 ﻿using Blazored.FluentValidation;
-using BreadCommunityWeb.Blz.Application.Dto.RequestDto.Registration;
-using BreadCommunityWeb.Blz.Application.Interfaces.Services.RestApi;
-using BreadCommunityWeb.Blz.Client.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
@@ -9,8 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VG.CDF.Client.Client.Models;
+using VG.CDF.Client.Dto.Authentication;
+using VG.CDF.Client.Interfaces.Services.RestApi;
 
-namespace BreadCommunityWeb.Blz.Client.Pages.Authentication
+namespace VG.CDF.Client.Pages.Authentication
 {
     public partial class Register
     {

@@ -8,8 +8,11 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using VG.CDF.Client.Interfaces.Services.RestApi;
+using VG.CDF.Client.Models.Analytics;
+using VG.CDF.Client.Services.Authentication;
 
-namespace BreadCommunityWeb.Blz.Client.Pages.Analytics
+namespace VG.CDF.Client.Pages.Analytics
 {
     public partial class WorkingTime
     {

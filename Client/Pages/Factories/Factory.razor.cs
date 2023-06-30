@@ -1,18 +1,15 @@
-﻿using BreadCommunityWeb.Blz.Application.Dto.Client;
-using BreadCommunityWeb.Blz.Application.Dto.ResponseDto;
-using BreadCommunityWeb.Blz.Application.Interfaces.Services.RestApi;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Net.Http.Json;
-using BreadCommunityWeb.Blz.Application.Models.ExcelModels;
+using VG.CDF.Client.Interfaces.Services.RestApi;
+using VG.CDF.Client.Models.ExcelModels;
 
-namespace BreadCommunityWeb.Blz.Client.Pages.Factories
+
+namespace VG.CDF.Client.Pages.Factories
 {
     public partial class Factory
     {

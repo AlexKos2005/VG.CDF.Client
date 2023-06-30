@@ -27,7 +27,7 @@ namespace VG.CDF.Client.Shared
             //_interceptor.RegisterEvent();
         }
 
-        private async Task DarkMode()
+        public async Task DarkMode()
         {
             //bool isDarkMode = await _clientPreferenceManager.ToggleDarkModeAsync();
             //_currentTheme = isDarkMode

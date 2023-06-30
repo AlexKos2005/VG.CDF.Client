@@ -10,12 +10,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using BreadCommunityWeb.Blz.Application.Interfaces.Services.RestApi;
-using BreadCommunityWeb.Blz.Application.Dto.RequestDto.Authentication;
-using BreadCommunityWeb.Blz.Client.Models;
 using Blazored.LocalStorage;
+using VG.CDF.Client.Client.Models;
+using VG.CDF.Client.Dto.Authentication;
+using VG.CDF.Client.Interfaces.Services.RestApi;
 
-namespace BreadCommunityWeb.Blz.Client.Pages.Authentication
+namespace VG.CDF.Client.Pages.Authentication
 {
     public partial class Login
     {

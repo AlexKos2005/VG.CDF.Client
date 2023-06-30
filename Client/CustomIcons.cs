@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace BreadCommunityWeb.Blz.Client
+namespace VG.CDF.Client
 {
     [ExcludeFromCodeCoverage]
     public class CustomIcons
