@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.18" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.18" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Pages\Analytics\WorkingTime.razor" />
+      <AdditionalFiles Include="Pages\Authentication\ConfirmValidRegistration.razor" />
+      <AdditionalFiles Include="Pages\Authentication\Login.razor" />
+      <AdditionalFiles Include="Pages\Authentication\Register.razor" />
+      <AdditionalFiles Include="Pages\Factories\AlarmEvents.razor" />
+      <AdditionalFiles Include="Pages\Factories\Factories.razor" />
+      <AdditionalFiles Include="Pages\Factories\Factory.razor" />
+      <AdditionalFiles Include="Pages\Factories\Files.razor" />
+      <AdditionalFiles Include="Pages\Factories\Reports.razor" />
+    </ItemGroup>
+
+</Project>
