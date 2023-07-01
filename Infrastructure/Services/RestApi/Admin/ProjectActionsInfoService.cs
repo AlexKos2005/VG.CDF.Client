@@ -11,7 +11,7 @@ public class ProjectActionsInfoService : WebApiServiceBase<ProjectActionsInfoDto
 {
     private const string _uri = "api/admin/ProjectActionsInfo/";
 
-    public ProjectActionsInfoService(ICrudService<ProjectActionsInfoDto> crudService) : base(crudService, _uri)
+    public ProjectActionsInfoService(ICrudService<ProjectActionsInfoDto> crudService) : base(crudService)
     {
     }
 }

@@ -14,12 +14,10 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Base;
 public abstract class CrudServiceBase<T>: ICrudService<T>
 {
     private readonly HttpClient _httpClient;
-    private readonly string _url;
     private readonly ILocalStorageService _localStorage;
-    public CrudServiceBase(HttpClient httpClient, ILocalStorageService localStorage,string url)
+    public CrudServiceBase(HttpClient httpClient, ILocalStorageService localStorage)
     {
         _httpClient = httpClient;
-        _url = url;
         _localStorage = localStorage;
     }
     

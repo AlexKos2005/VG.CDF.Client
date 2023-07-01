@@ -7,11 +7,12 @@ using VG.CDF.Client.Infrastructure.Services.RestApi.Base;
 
 namespace VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 
-public class ParameterDescriptionService : WebApiServiceBase<ParameterDescriptionDto>,IParameterDescriptionService
+public class SignUpService : WebApiServiceBase<UserDto>,ISignUpService
 {
-    private const string _uri = "api/admin/ParameterDescription/";
+    private const string _urn = "api/SignUp/";
 
-    public ParameterDescriptionService(ICrudService<ParameterDescriptionDto> crudService) : base(crudService)
+    public SignUpService(ICrudService<UserDto> crudService) : base(crudService)
     {
+        base.Urn = _urn;
     }
 }

@@ -11,7 +11,7 @@ public class LanguageService : WebApiServiceBase<LanguageDto>,ILanguageService
 {
     private const string _uri = "api/admin/Language/";
 
-    public LanguageService(ICrudService<LanguageDto> crudService) : base(crudService, _uri)
+    public LanguageService(ICrudService<LanguageDto> crudService) : base(crudService)
     {
     }
 }

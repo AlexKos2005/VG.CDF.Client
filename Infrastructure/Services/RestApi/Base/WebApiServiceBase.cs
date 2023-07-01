@@ -10,17 +10,16 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Base;
 
 public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBaseDto
 {
-    private readonly string _urn;
+    protected string Urn = String.Empty;
     private readonly ICrudService<T> _crudService;
-    public WebApiServiceBase(ICrudService<T> crudService, string urn)
+    public WebApiServiceBase(ICrudService<T> crudService)
     {
         _crudService = crudService;
-        _urn = urn;
     }
     
     public async Task<IEnumerable<T>> GetList<Tg>(Tg entity)
     {
-        var result = await _crudService.Get<IEnumerable<T>>(_urn,entity);
+        var result = await _crudService.Get<IEnumerable<T>>(Urn,entity);
 
         if (result.IsError)
         {
@@ -32,7 +31,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
 
     public async Task<T?> Create<Tc>(Tc entity)
     {
-        var result = await _crudService.Post<T>(_urn,entity);
+        var result = await _crudService.Post<T>(Urn,entity);
 
         if (result.IsError)
         {
@@ -44,7 +43,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
 
     public async Task<T?> Update<Tu>(Tu entity)
     {
-        var result = await _crudService.Update<T>(_urn,entity);
+        var result = await _crudService.Update<T>(Urn,entity);
 
         if (result.IsError)
         {
@@ -56,7 +55,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
 
     public async Task<bool> Delete<Td>(Td entity)
     {
-        var result = await _crudService.Delete(_urn,entity);
+        var result = await _crudService.Delete(Urn,entity);
 
         if (result.IsError)
         {

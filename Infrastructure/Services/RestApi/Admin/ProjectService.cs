@@ -11,7 +11,7 @@ public class ProjectService : WebApiServiceBase<ProjectDto>,IProjectService
 {
     private const string _uri = "api/admin/Project/";
 
-    public ProjectService(ICrudService<ProjectDto> crudService) : base(crudService, _uri)
+    public ProjectService(ICrudService<ProjectDto> crudService) : base(crudService)
     {
     }
 }

@@ -11,7 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using MudBlazor.Services;
+using VG.CDF.Client.Application.Dto;
 using VG.CDF.Client.Application.Interfaces.Services;
+using VG.CDF.Client.Application.Interfaces.Services.RestApi;
 using VG.CDF.Client.Infrastructure.Services.RestApi;
 using VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 using VG.CDF.Client.Interfaces.Services.RestApi;
@@ -26,7 +28,9 @@ namespace VG.CDF.Client.Extensions
         public static void RegistrateServices(this IServiceCollection services)
         {
             services.AddTransient<IUserService, UserService>();
-            
+            services.AddTransient<ISignUpService, SignUpService>();
+            services.AddTransient<IWebApiService<UserDto>, WebApiService<UserDto>>();
+            services.AddTransient<ICrudService<UserDto>, CrudService<UserDto>>();
             services.AddScoped<ClientAuthenticationStateProvider>();
             services.AddScoped<AuthenticationStateProvider>(provider =>
                 provider.GetRequiredService<ClientAuthenticationStateProvider>());

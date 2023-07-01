@@ -11,7 +11,7 @@ public class ParameterService : WebApiServiceBase<ParameterDto>,IParameterServic
 {
     private const string _uri = "api/admin/Parameter/";
 
-    public ParameterService(ICrudService<ParameterDto> crudService) : base(crudService, _uri)
+    public ParameterService(ICrudService<ParameterDto> crudService) : base(crudService)
     {
     }
 }

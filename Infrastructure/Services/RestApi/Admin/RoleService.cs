@@ -11,7 +11,7 @@ public class RoleService : WebApiServiceBase<RoleDto>,IRoleService
 {
     private const string _uri = "api/admin/Role/";
 
-    public RoleService(ICrudService<RoleDto> crudService) : base(crudService, _uri)
+    public RoleService(ICrudService<RoleDto> crudService) : base(crudService)
     {
     }
 }

@@ -11,7 +11,7 @@ public class CompanyService : WebApiServiceBase<CompanyDto>,ICompanyService
 {
     private const string _uri = "api/admin/Company/";
 
-    public CompanyService(ICrudService<CompanyDto> crudService) : base(crudService, _uri)
+    public CompanyService(ICrudService<CompanyDto> crudService) : base(crudService)
     {
     }
 }

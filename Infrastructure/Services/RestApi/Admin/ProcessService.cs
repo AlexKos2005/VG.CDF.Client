@@ -11,7 +11,7 @@ public class ProcessService : WebApiServiceBase<ProcessDto>,IProcessService
 {
     private const string _uri = "api/admin/Process/";
 
-    public ProcessService(ICrudService<ProcessDto> crudService) : base(crudService, _uri)
+    public ProcessService(ICrudService<ProcessDto> crudService) : base(crudService)
     {
     }
 }

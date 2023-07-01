@@ -11,7 +11,7 @@ public class WorkEmailService : WebApiServiceBase<WorkEmailDto>,IWorkEmailServic
 {
     private const string _uri = "api/admin/WorkEmail/";
 
-    public WorkEmailService(ICrudService<WorkEmailDto> crudService) : base(crudService, _uri)
+    public WorkEmailService(ICrudService<WorkEmailDto> crudService) : base(crudService)
     {
     }
 }

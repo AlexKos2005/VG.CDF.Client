@@ -8,6 +8,6 @@ namespace VG.CDF.Client.EndPoints
 {
    public class AuthenticationEndPoints
     {
-        public static string Authenticate => "/api/Authentication/Authenticate";
+        public static string Authenticate => "/api/SignIn/Authenticate";
     }
 }

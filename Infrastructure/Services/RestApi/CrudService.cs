@@ -7,7 +7,7 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi;
 
 public class CrudService<T>: CrudServiceBase<T>, ICrudService<T>
 {
-    public CrudService(HttpClient httpClient, ILocalStorageService localStorage, string url) : base(httpClient, localStorage, url)
+    public CrudService(HttpClient httpClient, ILocalStorageService localStorage) : base(httpClient, localStorage)
     {
     }
 }

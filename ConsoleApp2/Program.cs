@@ -21,7 +21,7 @@ var query = new GetCompaniesListQuery();
 using (var httpClient = new HttpClient())
 {
     httpClient.BaseAddress = new Uri("http://localhost:5000/");
-    var crudService = new CrudService<CompanyDto>(httpClient, lcStoreMoq.Object, url);
+    var crudService = new CrudService<CompanyDto>(httpClient, lcStoreMoq.Object);
     var service = new CompanyService(crudService);
 
     var res = await service.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery() { Name = "InitComp2" });

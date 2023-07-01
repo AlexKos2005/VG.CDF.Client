@@ -11,7 +11,7 @@ public class ParameterReportTaskService : WebApiServiceBase<ParameterReportTaskD
 {
     private const string _uri = "api/admin/ParameterReportTask/";
 
-    public ParameterReportTaskService(ICrudService<ParameterReportTaskDto> crudService) : base(crudService, _uri)
+    public ParameterReportTaskService(ICrudService<ParameterReportTaskDto> crudService) : base(crudService)
     {
     }
 }

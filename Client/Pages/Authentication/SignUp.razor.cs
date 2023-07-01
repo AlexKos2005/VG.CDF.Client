@@ -20,7 +20,7 @@ namespace VG.CDF.Client.Pages.Authentication
         private bool _passwordVisibility;
 
         [Inject] 
-        protected IUserService _userService { get; set; }
+        protected ISignUpService SignUpService { get; set; }
         
         [Inject] 
         protected IRegisterRestApiService RegisterRestApiService { get; set; }
@@ -43,11 +43,6 @@ namespace VG.CDF.Client.Pages.Authentication
         {
             //MudAlert = "dsfefgerg";
             RegData = new UserRegistration();
-        }
-
-        protected override Task OnInitializedAsync()
-        {
-            return base.OnInitializedAsync();
         }
 
         private void TogglePasswordVisibility()
@@ -76,7 +71,7 @@ namespace VG.CDF.Client.Pages.Authentication
 
             var signUpCommand = new CreateUserCommand() { Email = RegData.UserEmail, PasswordHash = RegData.Password };
 
-            var signUpResult = await _userService.Create(signUpCommand);
+            var signUpResult = await SignUpService.Create(signUpCommand);
 
             if (signUpResult != null)
             { 

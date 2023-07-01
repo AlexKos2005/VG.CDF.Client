@@ -1,6 +1,6 @@
 ﻿@using Microsoft.Extensions.Localization
 
-@page "/login"
+@page "/signin"
 @layout MainLayout
 @attribute [AllowAnonymous]
 
@@ -27,7 +27,7 @@
         </MudItem>
         <MudItem xs="12">
             <div class="d-flex justify-center">
-                <MudText>@Localizer["Don't have an account?"].Value <MudLink Href="/register">@Localizer["SignUp here"].Value</MudLink></MudText>
+                <MudText>@Localizer["Don't have an account?"].Value <MudLink Href="/signup">@Localizer["SignUp here"].Value</MudLink></MudText>
             </div>
         </MudItem>
         <MudItem xs="12">

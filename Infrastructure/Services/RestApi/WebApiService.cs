@@ -6,7 +6,7 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi;
 
 public class WebApiService<T>: WebApiServiceBase<T>, IWebApiService<T> where T:EntityBaseDto
 {
-    public WebApiService(ICrudService<T> crudService, string urn) : base(crudService, urn)
+    public WebApiService(ICrudService<T> crudService) : base(crudService)
     {
     }
 }
