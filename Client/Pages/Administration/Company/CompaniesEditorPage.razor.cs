@@ -10,7 +10,7 @@ using VG.CDF.Client.Application.Companies.Queries;
 using VG.CDF.Client.Application.Dto;
 using VG.CDF.Client.Application.Interfaces.Services;
 
-namespace VG.CDF.Client.Pages.Administration;
+namespace VG.CDF.Client.Pages.Administration.Company;
 
 public partial class CompaniesEditorPage
 {
@@ -23,52 +23,60 @@ public partial class CompaniesEditorPage
     protected override async Task OnInitializedAsync()
     {
         Companies = await CompanyService.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery() { });
-        /*Companies.Add(new CompanyDto(){Id = Guid.NewGuid(), Name = "1"});
-        Companies.Add(new CompanyDto(){Id = Guid.NewGuid(), Name = "2"});
-        Companies.Add(new CompanyDto(){Id = Guid.NewGuid(), Name = "3"});*/
     }
 
-    protected async Task EditCompany()
+    protected async Task EditCompany(CompanyDto companyDto)
     {
-        var options = new ModalOptions() 
-        { 
-            Position = ModalPosition.Middle
-        };
-        
-        var company = new CompanyDto() { Name = "TestModal" };
-        var parameters = new ModalParameters().Add(nameof(Administration.EditCompany.Company), company);
-        var modal = Modal.Show<EditCompany>("",parameters,options);
+        var parameters = new ModalParameters().Add("Company", companyDto);
+        var modal = Modal.Show<EditCompanyModal>("Изменить",parameters);
         var modalResult = await modal.Result;
 
         if (modalResult.Confirmed)
         {
             var name = modalResult.Data.ToString();
+            await CompanyService.Update(new CompanyDto(){Id = companyDto.Id,Name = name});
         }
         
         modal.Close(modalResult);
-
+        
+        Companies = await CompanyService.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery() { });
     }
     protected async Task AddCompany()
     {
-        var options = new ModalOptions() 
-        { 
-            Position = ModalPosition.Middle
-        };
-        
-        var company = new CompanyDto() { Name = "TestModal" };
-        var modal = Modal.Show<AddCompany>("",options);
+        var modal = Modal.Show<AddCompanyModal>("Создать");
         var modalResult = await modal.Result;
 
         if (modalResult.Confirmed)
         {
             var name = modalResult.Data.ToString();
-
-            var createdCompany = await CompanyService.Create(new CreateCompanyCommand() { Name = name });
+            var createdCompany = await CompanyService.Create(new CreateCompanyCommand() { Name = name});
         }
         
         modal.Close(modalResult);
         
         Companies = await CompanyService.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery() { });
 
+    }
+    
+    protected async Task DeleteCompany(CompanyDto companyDto)
+    {
+        var parameters = new ModalParameters().Add("Company", companyDto);
+        var modal = Modal.Show<DeleteCompanyModal>("Удалить",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            await CompanyService.Delete<string>(companyDto.Id.ToString());
+        }
+        
+        modal.Close(modalResult);
+        
+        Companies = await CompanyService.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery() { });
+    }
+
+
+    protected void DD(CompanyDto companyDto)
+    {
+        
     }
 }

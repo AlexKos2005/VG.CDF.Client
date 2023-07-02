@@ -59,6 +59,7 @@ public abstract class CrudServiceBase<T>: ICrudService<T>
         var request = new HttpRequestMessage(HttpMethod.Delete, content.GetQuery(urn));
         var jwt = await _localStorage.GetItemAsStringAsync("authToken");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+        
         var response = await _httpClient.SendAsync(request);
 
         return response.GetFromHttpRespone();

@@ -1,9 +1,8 @@
-﻿@page "/editcompany"
+﻿@page "/deletecompany"
 @using VG.CDF.Client.Application.Dto
 @using Color = MudBlazor.Color
-<h3>EditCompany</h3>
+<h3>Вы действительно хотите удалить компанию @CompanyName?</h3>
 
-<MudTextField @bind-Value="CompanyName" Label="Standard" Variant="Variant.Text"></MudTextField>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
 
@@ -11,12 +10,18 @@
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     
+
     [Parameter]
     public CompanyDto Company { get; set; }
 
     protected string CompanyName { get; set; } = null;
+
+    protected override void OnInitialized()
+    {
+        CompanyName = Company.Name;
+    }
     
-    private async Task SubmitForm() => await BlazoredModal.CloseAsync(ModalResult.Ok(CompanyName));
+    private async Task SubmitForm() => await BlazoredModal.CloseAsync(ModalResult.Ok());
     private async Task Cancel() => await BlazoredModal.CancelAsync();
 
 }

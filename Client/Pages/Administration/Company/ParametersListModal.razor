@@ -1,0 +1,60 @@
+﻿@using VG.CDF.Client.Infrastructure.Services.RestApi.Admin
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Parameters.Queries
+@inject ParameterService ParameterService
+
+
+<MudTable Striped="true" Bordered="true" Items="@Parameters"
+          Dense="@dense"
+          Hover="@hover">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Компании</MudText>
+        <MudSpacer/>
+        <MudIconButton Icon="fa-solid fa-plus" Color="MudBlazor.Color.Primary" @onclick="@AddCompany" Title="Добавить">Добавить компанию</MudIconButton>
+    </ToolBarContent>
+    <ColGroup>
+        <col style="width: 50px"/>
+        <col style="width: 150px"/>
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>
+            Название
+        </MudTh>
+        <MudTh>
+            Действия
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="name">@context.Name</MudTd>
+        <MudTd>
+            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditCompany(context))" Title="Изменить название"></MudIconButton>
+            <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Primary" @onclick="@(e=>DeleteCompany(context))" Title="Удалить"></MudIconButton>
+            <MudIconButton Icon="fas fa-file-invoice" Color="MudBlazor.Color.Primary" Title="Проекты"></MudIconButton>
+            <MudIconButton Icon="fas fa-file-invoice" Color="MudBlazor.Color.Primary" Title="Параметры"></MudIconButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+    
+
+
+
+@code
+{
+    private bool dense = false;
+    private bool hover = true;
+    
+    public IEnumerable<ParameterDto> Parameters { get; set; }
+
+    [Parameter] Guid CompanyId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
+    }
+
+    private async Task AddParameter()
+    {
+        
+    }
+
+}

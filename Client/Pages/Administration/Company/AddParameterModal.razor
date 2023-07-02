@@ -1,9 +1,8 @@
-﻿@page "/addcompany"
+﻿@page "/addparameter"
 @using VG.CDF.Client.Application.Dto
 @using Color = MudBlazor.Color
-<h3>EditCompany</h3>
 
-<MudTextField @bind-Value="CompanyName" Label="Standard" Variant="Variant.Text"></MudTextField>
+<MudTextField @bind-Value="@Parameter." Label="Название компании" Variant="Variant.Text"></MudTextField>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
 
@@ -12,7 +11,7 @@
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     
 
-    protected string CompanyName { get; set; } = null;
+    protected ParameterDto Parameter { get; set; } = null;
     
     private async Task SubmitForm() => await BlazoredModal.CloseAsync(ModalResult.Ok(CompanyName));
     private async Task Cancel() => await BlazoredModal.CancelAsync();

@@ -11,21 +11,21 @@ public static class HttpQueryExtentions
     public static string? GetQuery(this object entity, string? url = null )
     {
         StringBuilder query = new StringBuilder();
-        
+        string str;
         if (url != null)
         {
             url.TrimEnd('/');
             query.Append(url);
-            query.Append(_sepRouteSymb);
         }
         
         //простой тип, без полей
         if(entity is ValueType || entity is string)
         {
-            query.Append(entity);
+            query.Append(entity.ToString());
         }
         else
         {
+            query.Append(_sepRouteSymb);
             foreach (var prop in entity.GetType().GetProperties())
             {
                 if (prop.GetValue(entity) != null)
@@ -37,8 +37,6 @@ public static class HttpQueryExtentions
                 }
             }
         }
-        
-        
         
         return query.ToString().ToLower().TrimEnd(new char[]{_sepParamsSymb,_sepRouteSymb});
 
