@@ -34,7 +34,7 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi;
         public async Task<AuthenticationResponseDto> LogIn(UserAuthenticationRequestDto userRequestDto)
         {
             var tt = AuthenticationEndPoints.Authenticate;
-            var response = await _httpClient.PostAsJsonAsync(AuthenticationEndPoints.Authenticate, userRequestDto);
+            var response = await _httpClient.PostAsJsonAsync(AuthenticationEndPoints.Authenticate2, userRequestDto);
             var data = await response.ToResult<AuthenticationResponseDto>();
             await _localStorage.SetItemAsync("authToken", data.JwtToken);
             ((ClientAuthenticationStateProvider)_authStateProvider).NotifyUserAuthentication(userRequestDto.Email);

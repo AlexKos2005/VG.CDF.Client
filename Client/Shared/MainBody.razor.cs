@@ -16,8 +16,8 @@ namespace VG.CDF.Client.Shared
 {
     public partial class MainBody
     {
-        [Inject]
-        protected IAuthenticateRestApiService AuthService { get; set; }
+        /*[Inject]
+        protected IAuthenticateRestApiService AuthService { get; set; }*/
 
         [Inject]
         protected NavigationManager NavigationManager { get; set; }
@@ -40,9 +40,7 @@ namespace VG.CDF.Client.Shared
         private string Email { get; set; }
         private char FirstLetterOfName { get; set; }
         private bool _rightToLeft = false;
-
-       
-
+        
         private async Task RightToLeftToggle()
         {
             //var isRtl = await _clientPreferenceManager.ToggleLayoutDirection();
@@ -58,7 +56,7 @@ namespace VG.CDF.Client.Shared
 
         public async Task LogOut()
         {
-            await AuthService.Logout();
+            //await AuthService.Logout();
 
             NavigationManager.NavigateTo("/");
         }

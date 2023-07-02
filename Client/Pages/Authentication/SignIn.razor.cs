@@ -43,7 +43,11 @@ namespace VG.CDF.Client.Pages.Authentication
         {
             LogInData = new UserLogin();
         }
-       
+
+        protected override async Task OnInitializedAsync()
+        {
+            NavigationManager.NavigateTo("/");
+        }
 
         public async Task LogInAsync()
         {
@@ -58,7 +62,7 @@ namespace VG.CDF.Client.Pages.Authentication
                 new UserAuthenticationRequestDto() { Email = LogInData.UserEmail, Password = LogInData.Password }
                 );
 
-                NavigationManager.NavigateTo("/factories");
+                NavigationManager.NavigateTo("/");
             //}
             //catch(Exception e)
             //{

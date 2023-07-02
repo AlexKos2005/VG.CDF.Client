@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using Blazored.LocalStorage;
+using Blazored.Modal;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Microsoft.AspNetCore.Authorization;
@@ -31,9 +32,13 @@ namespace VG.CDF.Client.Extensions
             services.AddTransient<ISignUpService, SignUpService>();
             services.AddTransient<IWebApiService<UserDto>, WebApiService<UserDto>>();
             services.AddTransient<ICrudService<UserDto>, CrudService<UserDto>>();
-            services.AddScoped<ClientAuthenticationStateProvider>();
-            services.AddScoped<AuthenticationStateProvider>(provider =>
-                provider.GetRequiredService<ClientAuthenticationStateProvider>());
+            
+            services.AddTransient<ICompanyService, CompanyService>();
+            services.AddTransient<IWebApiService<CompanyDto>, WebApiService<CompanyDto>>();
+            services.AddTransient<ICrudService<CompanyDto>, CrudService<CompanyDto>>();
+            //services.AddScoped<ClientAuthenticationStateProvider>();
+            //services.AddScoped<AuthenticationStateProvider>(provider =>
+                //provider.GetRequiredService<ClientAuthenticationStateProvider>());
             
             services.AddLocalization(options =>
                 {
@@ -62,6 +67,7 @@ namespace VG.CDF.Client.Extensions
             /*builder.Services.AddScoped<IUserDataRestApiService, UserDataRestApiService>();
             builder.Services.AddScoped<ITagsGroupsRestApiService, TagsGroupsRestApiService>();*/
             services.AddBlazorise();
+            services.AddBlazoredModal();
             var classProvider = new BootstrapClassProvider();
             var styleProvider =new BootstrapStyleProvider();
             services.AddSingleton<IClassProvider>(classProvider);

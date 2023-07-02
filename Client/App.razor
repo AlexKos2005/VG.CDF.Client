@@ -1,12 +1,21 @@
 
-<CascadingAuthenticationState>
+    <CascadingBlazoredModal>
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+            
+            
+            @*<AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-                    <SignIn />
+                    <SignIn/>
                 </NotAuthorized>
-            </AuthorizeRouteView>
+                
+                
+            </AuthorizeRouteView>*@
+
+            @*<CompaniesEditorPage/>*@
+
         </Found>
         <NotFound>
             @*<LayoutView Layout="@typeof(NotFoundLayout)">*@
@@ -14,4 +23,5 @@
             @*</LayoutView>*@
         </NotFound>
     </Router>
-</CascadingAuthenticationState>
+    </CascadingBlazoredModal>
+@*<CascadingAuthenticationState></CascadingAuthenticationState>*@
