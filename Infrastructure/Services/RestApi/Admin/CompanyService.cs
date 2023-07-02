@@ -9,9 +9,10 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi;
 
 public class CompanyService : WebApiServiceBase<CompanyDto>,ICompanyService
 {
-    private const string _uri = "api/admin/Company/";
+    protected const string _urn = "api/admin/Company/";
 
     public CompanyService(ICrudService<CompanyDto> crudService) : base(crudService)
     {
+        base.Urn = _urn;
     }
 }

@@ -1,4 +1,4 @@
-﻿@page "/editcompany"
+﻿@page "/addcompany"
 @using VG.CDF.Client.Application.Dto
 @using Color = MudBlazor.Color
 <h3>EditCompany</h3>
@@ -11,8 +11,6 @@
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     
-    [Parameter]
-    public CompanyDto Company { get; set; }
 
     protected string CompanyName { get; set; } = null;
     

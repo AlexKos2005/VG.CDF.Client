@@ -10,7 +10,7 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Base;
 
 public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBaseDto
 {
-    protected string Urn = String.Empty;
+    protected string Urn { get; set; }
     private readonly ICrudService<T> _crudService;
     public WebApiServiceBase(ICrudService<T> crudService)
     {
