@@ -13,6 +13,8 @@
     <ColGroup>
         <col style="width: 50px"/>
         <col style="width: 150px"/>
+        <col style="width: 150px"/>
+        <col style="width: 150px"/>
     </ColGroup>
     <HeaderContent>
         <MudTh>
@@ -21,13 +23,23 @@
         <MudTh>
             Действия
         </MudTh>
+        <MudTh>
+            Проекты
+        </MudTh>
+        <MudTh>
+            Параметры
+            </MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="name">@context.Name</MudTd>
         <MudTd>
             <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditCompany(context))" Title="Изменить название"></MudIconButton>
             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteCompany(context))" Title="Удалить"></MudIconButton>
+        </MudTd>
+        <MudTd>
             <MudIconButton Icon="fas fa-file-invoice" Color="MudBlazor.Color.Primary" Title="Проекты"></MudIconButton>
+        </MudTd>
+        <MudTd>
             <MudIconButton Icon="fas fa-file-invoice" Color="MudBlazor.Color.Primary" @onclick="@(e=>ShowParametersList(context))" Title="Параметры"></MudIconButton>
         </MudTd>
     </RowTemplate>
