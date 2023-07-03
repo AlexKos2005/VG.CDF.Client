@@ -69,14 +69,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Parameters = await ParameterService.GetList<GetParametersListQuery>(
-            new GetParametersListQuery() { CompanyId = CompanyId }
-            );
-        Parameters = Parameters.OrderBy(c => c.ExternalId);
-        
-        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
-            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId }
-            );
+        await UpdateViewModels();
     }
 
     private async Task AddParameter()
@@ -101,11 +94,7 @@
         }
         
         modal.Close(modalResult);
-        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
-        Parameters = Parameters.OrderBy(c => c.ExternalId);
-        
-        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
-            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+        await UpdateViewModels();
     }
     
     private async Task EditParameter(ParameterDto parameter)
@@ -156,11 +145,7 @@
         }
         
         modal.Close(modalResult);
-        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
-        Parameters = Parameters.OrderBy(c => c.ExternalId);
-
-        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
-            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+        await UpdateViewModels();
 
     }
 
@@ -177,6 +162,12 @@
         }
         
         modal.Close(modalResult);
+        await UpdateViewModels();
+    }
+    
+    
+    private async Task UpdateViewModels()
+    {
         Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
         Parameters = Parameters.OrderBy(c => c.ExternalId);
         

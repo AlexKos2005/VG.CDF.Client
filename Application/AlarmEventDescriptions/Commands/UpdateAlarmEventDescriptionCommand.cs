@@ -13,6 +13,5 @@ public class UpdateAlarmEventDescriptionCommand : EntityBaseDto
 
     public Guid AlarmEventId { get; set; }
     
-    public Guid LanguageId { get; set; }
     
 }

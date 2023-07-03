@@ -9,6 +9,7 @@ using VG.CDF.Client.Application.Companies.Commands;
 using VG.CDF.Client.Application.Companies.Queries;
 using VG.CDF.Client.Application.Dto;
 using VG.CDF.Client.Application.Interfaces.Services;
+using VG.CDF.Client.Pages.Administration.AlarmEvent;
 using VG.CDF.Client.Pages.Administration.Parameter;
 
 namespace VG.CDF.Client.Pages.Administration.Company;
@@ -90,7 +91,7 @@ public partial class CompaniesEditorPage
     protected async Task ShowAlarmEventsList(CompanyDto companyDto)
     {
         var parameters = new ModalParameters().Add("CompanyId", companyDto.Id);
-        var modal = Modal.Show<ParametersListModal>("Параметры",parameters);
+        var modal = Modal.Show<AlarmEventsListModal>("Аварийные события",parameters);
         var modalResult = await modal.Result;
 
         modal.Close(modalResult);

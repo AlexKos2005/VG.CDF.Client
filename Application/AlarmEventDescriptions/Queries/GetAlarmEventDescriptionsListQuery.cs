@@ -5,6 +5,7 @@ namespace VG.CDF.Client.Application.AlarmEventDescriptions.Queries;
 public class GetAlarmEventDescriptionsListQuery
 {
     public Guid? Id { get; set; } = null;
+    public Guid? CompanyId { get; set; } = null;
     public string? RusDescription { get; set; } = null;
         
     public string? EngDescription { get; set; } = null;

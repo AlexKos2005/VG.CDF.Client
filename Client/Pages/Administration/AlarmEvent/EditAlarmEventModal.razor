@@ -1,0 +1,48 @@
+﻿@page "/editalarmevent"
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Interfaces.Services
+@using Color = MudBlazor.Color
+@using Microsoft.AspNetCore.Components
+@using VG.CDF.Client.Application.AlarmEventDescriptions.Queries
+@inject IAlarmEventDescriptionService AlarmEventDescriptionService
+
+<MudNumericField @bind-Value="@AlarmEvent.ExternalId" Label="Ид авар.события" Variant="Variant.Outlined" Min="1"></MudNumericField>
+<MudTextField @bind-Value="@AlarmEventDescription.RusDescription" Label="Rus" Variant="Variant.Outlined" Min="1"></MudTextField>
+<MudTextField @bind-Value="@AlarmEventDescription.UkrDescription" Label="Ukr" Variant="Variant.Outlined" Min="1"></MudTextField>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    
+    [Parameter] public AlarmEventDto AlarmEvent { get; set; }
+    public AlarmEventDescriptionDto AlarmEventDescription { get; set; } = new AlarmEventDescriptionDto();
+    private IEnumerable<ParameterGroupDto> ParameterGroups { get; set; } = new List<ParameterGroupDto>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var descriptions = await AlarmEventDescriptionService.GetList<GetAlarmEventDescriptionsListQuery>(
+            new GetAlarmEventDescriptionsListQuery() { AlarmEventId = AlarmEvent.Id }
+            );
+        AlarmEventDescription = descriptions.FirstOrDefault() ?? new AlarmEventDescriptionDto();
+    }
+
+    private async Task SubmitForm()
+    {
+        var alarmEventByDescriptions = new AlarmEventByDescriptionsDto()
+        {
+            AlarmEventId = AlarmEvent.Id,
+            CompanyId = AlarmEvent.CompanyId,
+            ExternalId = AlarmEvent.ExternalId,
+            RusDescription = AlarmEventDescription.RusDescription,
+            UkrDescription = AlarmEventDescription.UkrDescription,
+        };
+        
+        await BlazoredModal.CloseAsync(ModalResult.Ok(alarmEventByDescriptions));
+    }
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+
+}

@@ -6,18 +6,22 @@
 @using VG.CDF.Client.Application.ParameterDescriptions.Queries
 @using VG.CDF.Client.Application.Parameters.Commands
 @using VG.CDF.Client.Application.Parameters.Queries
+@using VG.CDF.Client.Application.AlarmEvents.Queries
+@using VG.CDF.Client.Application.AlarmEventDescriptions.Queries
+@using VG.CDF.Client.Application.AlarmEvents.Commands
+@using VG.CDF.Client.Application.AlarmEventDescriptions.Commands
 @inject IAlarmEventService AlarmEventService
-@inject IParameterDescriptionService ParameterDescriptionService
+@inject IAlarmEventDescriptionService AlarmEventDescriptionService
 @inject IModalService Modal
 
 
-<MudTable Striped="true" Bordered="true" Items="@Parameters"
+<MudTable Striped="true" Bordered="true" Items="@AlarmEvents"
           Dense="@dense"
           Hover="@hover">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Параметры</MudText>
+        <MudText Typo="Typo.h6">Аварийные события</MudText>
         <MudSpacer/>
-        <MudIconButton Icon="fa-solid fa-plus" Color="MudBlazor.Color.Primary" @onclick="@AddParameter" Title="Добавить">Добавить параметр</MudIconButton>
+        <MudIconButton Icon="fa-solid fa-plus" Color="MudBlazor.Color.Primary" @onclick="@AddAlarmEvent" Title="Добавить">Добавить параметр</MudIconButton>
     </ToolBarContent>
     <ColGroup>
         <col style="width: 50px"/>
@@ -42,14 +46,14 @@
     <RowTemplate>
         <MudTd DataLabel="name">@context.ExternalId</MudTd>
          <MudTd DataLabel="RU">
-             @ParameterDescriptions.FirstOrDefault(c => c.ParameterId == @context.Id)?.RusDescription
+             @AlarmEventDescriptions.FirstOrDefault(c => c.AlarmEventId == @context.Id)?.RusDescription
              </MudTd>
         <MudTd DataLabel="Ukr">
-            @ParameterDescriptions.FirstOrDefault(c => c.ParameterId == @context.Id)?.UkrDescription
+            @AlarmEventDescriptions.FirstOrDefault(c => c.AlarmEventId == @context.Id)?.UkrDescription
             </MudTd>
         <MudTd>
-            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditParameter(@context))" Title="Изменить"></MudIconButton>
-             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteParameter(@context))" Title="Удалить"></MudIconButton>
+            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditAlarmEvent(@context))" Title="Изменить"></MudIconButton>
+             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteAlarmEvent(@context))" Title="Удалить"></MudIconButton>
         </MudTd>
     </RowTemplate>
 </MudTable>
@@ -60,127 +64,114 @@
     private bool dense = false;
     private bool hover = true;
     
-    public IEnumerable<ParameterDto> Parameters { get; set; } = new List<ParameterDto>();
-    public IEnumerable<ParameterDescriptionDto> ParameterDescriptions { get; set; } = new List<ParameterDescriptionDto>();
+    public IEnumerable<AlarmEventDto> AlarmEvents { get; set; } = new List<AlarmEventDto>();
+    public IEnumerable<AlarmEventDescriptionDto> AlarmEventDescriptions { get; set; } = new List<AlarmEventDescriptionDto>();
     
 
     [Parameter] public Guid CompanyId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Parameters = await ParameterService.GetList<GetParametersListQuery>(
-            new GetParametersListQuery() { CompanyId = CompanyId }
-            );
-        Parameters = Parameters.OrderBy(c => c.ExternalId);
-        
-        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
-            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId }
-            );
+        await UpdateViewModels();
     }
 
-    private async Task AddParameter()
+    private async Task AddAlarmEvent()
     {
         var parameters = new ModalParameters().Add("CompanyId", CompanyId);
-        var modal = Modal.Show<AddParameterModal>("Создать",parameters);
+        var modal = Modal.Show<AddAlarmEventModal>("Создать",parameters);
         var modalResult = await modal.Result;
 
         if (modalResult.Confirmed)
         {
-            var parameter =(ParameterDto)(modalResult.Data);
-            var command = new CreateParameterCommand()
+            var parameter =(AlarmEventDto)(modalResult.Data);
+            var command = new CreateAlarmEventCommand()
             {
                 CompanyId = CompanyId,
                 ExternalId = parameter.ExternalId,
-                ParameterGroupId = parameter.ParameterGroupId,
-                ValueType = parameter.ValueType
             };
 
-            await ParameterService.Create<CreateParameterCommand>(command);
+            await AlarmEventService.Create<CreateAlarmEventCommand>(command);
 
         }
         
         modal.Close(modalResult);
-        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
-        Parameters = Parameters.OrderBy(c => c.ExternalId);
-        
-        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
-            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+
+        await UpdateViewModels();
     }
     
-    private async Task EditParameter(ParameterDto parameter)
+    private async Task EditAlarmEvent(AlarmEventDto parameter)
     {
-        var parameters = new ModalParameters().Add("Parameter", parameter);
-        var modal = Modal.Show<EditParameterModal>("Изменить",parameters);
+        var parameters = new ModalParameters().Add("AlarmEvent", parameter);
+        var modal = Modal.Show<EditAlarmEventModal>("Изменить",parameters);
         var modalResult = await modal.Result;
 
         if (modalResult.Confirmed)
         {
-            var parameterByDescriptions =(ParameterByDescriptionsDto)(modalResult.Data);
-            var parameterCommand = new UpdateParameterCommand()
+            var alarmEventByDescriptions =(AlarmEventByDescriptionsDto)(modalResult.Data);
+            var alarmEventCommand = new UpdateAlarmEventCommand()
             {
                 Id = parameter.Id,
                 CompanyId = CompanyId,
                 ExternalId = parameter.ExternalId,
-                ParameterGroupId = parameter.ParameterGroupId,
-                ValueType = parameter.ValueType
             };
 
-            await ParameterService.Update<UpdateParameterCommand>(parameterCommand);
+            await AlarmEventService.Update<UpdateAlarmEventCommand>(alarmEventCommand);
 
-            if (ParameterDescriptions.FirstOrDefault(c => c.ParameterId == parameterByDescriptions.ParameterId) == null)
+            if (AlarmEventDescriptions.FirstOrDefault(c => c.AlarmEventId == alarmEventByDescriptions.AlarmEventId) == null)
             {
-                var descriptionCommand = new CreateParameterDescriptionCommand()
+                var descriptionCommand = new CreateAlarmEventDescriptionCommand()
                 {
-                    RusDescription = parameterByDescriptions.RusDescription,
-                    UkrDescription = parameterByDescriptions.UkrDescription,
-                    ParameterId = parameterByDescriptions.ParameterId
+                    RusDescription = alarmEventByDescriptions.RusDescription,
+                    UkrDescription = alarmEventByDescriptions.UkrDescription,
+                    AlarmEventId = alarmEventByDescriptions.AlarmEventId
                 };
 
-                await ParameterDescriptionService.Create<CreateParameterDescriptionCommand>(descriptionCommand);
+                await AlarmEventDescriptionService.Create<CreateAlarmEventDescriptionCommand>(descriptionCommand);
             }
             else
             {
-                var descriptionCommand = new UpdateParameterDescriptionCommand()
+                var descriptionCommand = new UpdateAlarmEventDescriptionCommand()
                 {
-                    RusDescription = parameterByDescriptions.RusDescription,
-                    UkrDescription = parameterByDescriptions.UkrDescription,
-                    ParameterId = parameterByDescriptions.ParameterId,
-                    Id = ParameterDescriptions.First(c => c.ParameterId == parameterByDescriptions.ParameterId).Id
+                    RusDescription = alarmEventByDescriptions.RusDescription,
+                    UkrDescription = alarmEventByDescriptions.UkrDescription,
+                    Id = AlarmEventDescriptions.First(c => c.AlarmEventId == alarmEventByDescriptions.AlarmEventId).Id
                 };
 
-                await ParameterDescriptionService.Update<UpdateParameterDescriptionCommand>(descriptionCommand);
+                await AlarmEventDescriptionService.Update<UpdateAlarmEventDescriptionCommand>(descriptionCommand);
             }
            
 
         }
         
         modal.Close(modalResult);
-        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
-        Parameters = Parameters.OrderBy(c => c.ExternalId);
-
-        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
-            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+        await UpdateViewModels();
 
     }
 
     
-    private async Task DeleteParameter(ParameterDto parameter)
+    private async Task DeleteAlarmEvent(AlarmEventDto parameter)
     {
-        var parameters = new ModalParameters().Add("Parameter", parameter);
-        var modal = Modal.Show<DeleteParameterModal>("Удалить",parameters);
+        var parameters = new ModalParameters().Add("AlarmEvent", parameter);
+        var modal = Modal.Show<DeleteAlarmEventModal>("Удалить",parameters);
         var modalResult = await modal.Result;
 
         if (modalResult.Confirmed)
         {
-            await ParameterService.Delete<string>(parameter.Id.ToString());
+            await AlarmEventService.Delete<string>(parameter.Id.ToString());
         }
         
         modal.Close(modalResult);
-        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
-        Parameters = Parameters.OrderBy(c => c.ExternalId);
+        await UpdateViewModels();
+    }
+
+
+    private async Task UpdateViewModels()
+    {
+        AlarmEvents = await AlarmEventService.GetList<GetAlarmEventsListQuery>(new GetAlarmEventsListQuery() { CompanyId = CompanyId });
+        AlarmEvents = AlarmEvents.OrderBy(c => c.ExternalId);
         
-        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
-            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+        AlarmEventDescriptions = await AlarmEventDescriptionService.GetList<GetAlarmEventDescriptionsListQuery>(
+            new GetAlarmEventDescriptionsListQuery() { CompanyId = CompanyId });
     }
 
 }

@@ -1,0 +1,30 @@
+﻿@page "/addalarmevent"
+@using VG.CDF.Client.Application.Dto
+@using Color = MudBlazor.Color
+
+<MudNumericField @bind-Value="@ExternalId" Label="Ид авар.события" Variant="Variant.Outlined" Min="1"></MudNumericField>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    
+    [Parameter] public Guid CompanyId { get; set; }
+    private int ExternalId { get; set; }
+
+    private IEnumerable<ParameterGroupDto> ParameterGroups { get; set; } = new List<ParameterGroupDto>();
+
+    private async Task SubmitForm()
+    {
+        var parameter = new AlarmEventDto()
+        {
+            CompanyId = CompanyId,
+            ExternalId = ExternalId
+        };
+        
+        await BlazoredModal.CloseAsync(ModalResult.Ok(parameter));
+    }
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+
+}
