@@ -41,6 +41,10 @@ namespace VG.CDF.Client.Extensions
             services.AddTransient<IWebApiService<ParameterDto>, WebApiService<ParameterDto>>();
             services.AddTransient<ICrudService<ParameterDto>, CrudService<ParameterDto>>();
             
+            services.AddTransient<IAlarmEventService, AlarmEventService>();
+            services.AddTransient<IWebApiService<AlarmEventDto>, WebApiService<AlarmEventDto>>();
+            services.AddTransient<ICrudService<AlarmEventDto>, CrudService<AlarmEventDto>>();
+            
             services.AddTransient<IParameterGroupService, ParameterGroupService>();
             services.AddTransient<IWebApiService<ParameterGroupDto>, WebApiService<ParameterGroupDto>>();
             services.AddTransient<ICrudService<ParameterGroupDto>, CrudService<ParameterGroupDto>>();
@@ -48,6 +52,10 @@ namespace VG.CDF.Client.Extensions
             services.AddTransient<IParameterDescriptionService, ParameterDescriptionService>();
             services.AddTransient<IWebApiService<ParameterDescriptionDto>, WebApiService<ParameterDescriptionDto>>();
             services.AddTransient<ICrudService<ParameterDescriptionDto>, CrudService<ParameterDescriptionDto>>();
+            
+            services.AddTransient<IAlarmEventDescriptionService, AlarmEventDescriptionService>();
+            services.AddTransient<IWebApiService<AlarmEventDescriptionDto>, WebApiService<AlarmEventDescriptionDto>>();
+            services.AddTransient<ICrudService<AlarmEventDescriptionDto>, CrudService<AlarmEventDescriptionDto>>();
             //services.AddScoped<ClientAuthenticationStateProvider>();
             //services.AddScoped<AuthenticationStateProvider>(provider =>
                 //provider.GetRequiredService<ClientAuthenticationStateProvider>());

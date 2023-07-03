@@ -28,7 +28,10 @@
         </MudTh>
         <MudTh>
             Параметры
-            </MudTh>
+        </MudTh>
+         <MudTh>
+             Аварийные события
+             </MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="name">@context.Name</MudTd>
@@ -42,6 +45,9 @@
         <MudTd>
             <MudIconButton Icon="fas fa-file-invoice" Color="MudBlazor.Color.Primary" @onclick="@(e=>ShowParametersList(context))" Title="Параметры"></MudIconButton>
         </MudTd>
+        <MudTd>
+            <MudIconButton Icon="fas fa-file-invoice" Color="MudBlazor.Color.Primary" @onclick="@(e=>ShowParametersList(context))" Title="Аварийные события"></MudIconButton>
+            </MudTd>
     </RowTemplate>
 </MudTable>
     

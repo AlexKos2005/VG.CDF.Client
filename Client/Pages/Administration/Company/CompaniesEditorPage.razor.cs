@@ -86,4 +86,15 @@ public partial class CompaniesEditorPage
         
         Companies = await CompanyService.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery() { });
     }
+    
+    protected async Task ShowAlarmEventsList(CompanyDto companyDto)
+    {
+        var parameters = new ModalParameters().Add("CompanyId", companyDto.Id);
+        var modal = Modal.Show<ParametersListModal>("Параметры",parameters);
+        var modalResult = await modal.Result;
+
+        modal.Close(modalResult);
+        
+        Companies = await CompanyService.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery() { });
+    }
 }
