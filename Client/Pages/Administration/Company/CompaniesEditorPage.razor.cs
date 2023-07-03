@@ -9,7 +9,7 @@ using VG.CDF.Client.Application.Companies.Commands;
 using VG.CDF.Client.Application.Companies.Queries;
 using VG.CDF.Client.Application.Dto;
 using VG.CDF.Client.Application.Interfaces.Services;
-using VG.CDF.Client.Pages.Parameter;
+using VG.CDF.Client.Pages.Administration.Parameter;
 
 namespace VG.CDF.Client.Pages.Administration.Company;
 

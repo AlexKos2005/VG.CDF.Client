@@ -70,6 +70,17 @@
     <_ContentIncludedByDefault Remove="Pages\Factories\Files.razor" />
     <_ContentIncludedByDefault Remove="Pages\Factories\Reports.razor" />
     <_ContentIncludedByDefault Remove="Pages\Analytics\WorkingTime.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Parameter\AddParameterModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Parameter\DeleteParameterModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Parameter\EditParameterModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Parameter\ParametersListModal.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Pages\Administration\Parameter\AddParameterModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\Parameter\DeleteParameterModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\Parameter\EditParameterModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\Parameter\ParametersListModal.razor" />
   </ItemGroup>
 
 </Project>
