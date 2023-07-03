@@ -5,9 +5,11 @@ namespace VG.CDF.Client.Application.ParameterDescriptions.Commands;
 
 public class UpdateParameterDescriptionCommand : EntityBaseDto
 {
-    public string Description { get; set; } = string.Empty;
-
-    public Guid LanguageId { get; set; }
+    public string RusDescription { get; set; } = String.Empty;
+        
+    public string EngDescription { get; set; }= String.Empty;
+        
+    public string UkrDescription { get; set; }= String.Empty;
 
     public Guid ParameterId { get; set; }
     

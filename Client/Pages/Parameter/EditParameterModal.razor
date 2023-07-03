@@ -1,0 +1,67 @@
+﻿@page "/editparameter"
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Enums
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.Languages.Queries
+@using VG.CDF.Client.Application.ParameterDescriptions.Queries
+@using VG.CDF.Client.Application.ParameterGroups.Queries
+@using Color = MudBlazor.Color
+@using Microsoft.AspNetCore.Components
+@inject IParameterGroupService ParameterGroupService
+@inject IParameterDescriptionService ParameterDescriptionService
+
+<MudNumericField @bind-Value="@Parameter.ExternalId" Label="Ид параметра" Variant="Variant.Outlined" Min="1"></MudNumericField>
+<MudTextField @bind-Value="@ParameterDescription.RusDescription" Label="Rus" Variant="Variant.Outlined" Min="1"></MudTextField>
+<MudTextField @bind-Value="@ParameterDescription.UkrDescription" Label="Ukr" Variant="Variant.Outlined" Min="1"></MudTextField>
+<MudSelect T="ParameterValueType" @bind-Value="@Parameter.ValueType" Label="Тип параметра" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+    <MudSelectItem Value="@(ParameterValueType.DateTime)" />
+    <MudSelectItem Value="@(ParameterValueType.String)" />
+    <MudSelectItem Value="@(ParameterValueType.Double)" />
+</MudSelect>
+<MudSelect T="string" @bind-Value="@ParameterGroupName" Label="Группа параметров" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+    @foreach (var group in ParameterGroups)
+    {
+        <MudSelectItem Value="@group.Name"/>
+    }
+</MudSelect>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    
+    [Parameter] public ParameterDto Parameter { get; set; }
+    public ParameterDescriptionDto ParameterDescription { get; set; } = new ParameterDescriptionDto();
+    private IEnumerable<ParameterGroupDto> ParameterGroups { get; set; } = new List<ParameterGroupDto>();
+    private string ParameterGroupName { get; set; } = String.Empty;
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        ParameterGroups = await ParameterGroupService.GetList<GetParameterGroupsListQuery>(new GetParameterGroupsListQuery());
+        var descriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
+            new GetParameterDescriptionsListQuery() { ParameterId = Parameter.Id }
+            );
+        ParameterDescription = descriptions.FirstOrDefault() ?? new ParameterDescriptionDto();
+        ParameterGroupName = ParameterGroups.First(c => c.Id == Parameter.ParameterGroupId).Name;
+    }
+
+    private async Task SubmitForm()
+    {
+        var parameterByDescriptions = new ParameterByDescriptionsDto()
+        {
+            ParameterId = Parameter.Id,
+            CompanyId = Parameter.CompanyId,
+            ExternalId = Parameter.ExternalId,
+            ValueType = Parameter.ValueType,
+            ParameterGroupId = ParameterGroups.Where(c=>c.Name == ParameterGroupName).Select(c=>c.Id).First(),
+            RusDescription = ParameterDescription.RusDescription,
+            UkrDescription = ParameterDescription.UkrDescription,
+        };
+        
+        await BlazoredModal.CloseAsync(ModalResult.Ok(parameterByDescriptions));
+    }
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+
+}

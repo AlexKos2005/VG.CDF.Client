@@ -5,10 +5,11 @@ namespace VG.CDF.Client.Application.Dto
 {
     public class ParameterDescriptionDto : EntityBaseDto
     {
-        public string Description { get; set; }
-
-        public Guid LanguageId { get; set; }
-
+        public string RusDescription { get; set; } = String.Empty;
+        
+        public string EngDescription { get; set; }= String.Empty;
+        
+        public string UkrDescription { get; set; }= String.Empty;
         public Guid ParameterId { get; set; }
 
     }

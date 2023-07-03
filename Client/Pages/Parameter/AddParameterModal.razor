@@ -26,7 +26,6 @@
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     
     [Parameter] public Guid CompanyId { get; set; }
-    [Parameter] public int PrevExtId { get; set; }
     private int ExternalId { get; set; }
     private ParameterValueType ValueType { get; set; }
     private string ParameterGroupName { get; set; } = String.Empty;

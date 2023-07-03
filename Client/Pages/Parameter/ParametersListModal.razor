@@ -1,10 +1,14 @@
 ﻿@using VG.CDF.Client.Infrastructure.Services.RestApi.Admin
 @using VG.CDF.Client.Application.Dto
 @using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.Languages.Queries
+@using VG.CDF.Client.Application.ParameterDescriptions.Commands
+@using VG.CDF.Client.Application.ParameterDescriptions.Queries
 @using VG.CDF.Client.Application.Parameters.Commands
 @using VG.CDF.Client.Application.Parameters.Queries
 @inject IParameterService ParameterService
 @inject IParameterGroupService ParameterGroupService
+@inject IParameterDescriptionService ParameterDescriptionService
 @inject IModalService Modal
 
 
@@ -19,6 +23,8 @@
     <ColGroup>
         <col style="width: 50px"/>
         <col style="width: 150px"/>
+        <col style="width: 150px"/>
+        <col style="width: 150px"/>
     </ColGroup>
     <HeaderContent>
         <MudTh>
@@ -28,7 +34,7 @@
             Название RU
         </MudTh>
         <MudTh>
-            Название U
+            Название Ukr
         </MudTh>
         <MudTh>
             Действия
@@ -36,30 +42,41 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="name">@context.ExternalId</MudTd>
-        <MudTd DataLabel="RU"></MudTd>
-        <MudTd DataLabel="Uk"></MudTd>
+         <MudTd DataLabel="RU">
+             @ParameterDescriptions.FirstOrDefault(c => c.ParameterId == @context.Id)?.RusDescription
+             </MudTd>
+        <MudTd DataLabel="Ukr">
+            @ParameterDescriptions.FirstOrDefault(c => c.ParameterId == @context.Id)?.UkrDescription
+            </MudTd>
         <MudTd>
-            <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteParameter(@context))" Title="Удалить"></MudIconButton>
+            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditParameter(@context))" Title="Изменить"></MudIconButton>
+             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteParameter(@context))" Title="Удалить"></MudIconButton>
         </MudTd>
     </RowTemplate>
 </MudTable>
-    
-
 
 
 @code
 {
     private bool dense = false;
     private bool hover = true;
-
+    
     public IEnumerable<ParameterDto> Parameters { get; set; } = new List<ParameterDto>();
+    public IEnumerable<ParameterDescriptionDto> ParameterDescriptions { get; set; } = new List<ParameterDescriptionDto>();
+    
 
     [Parameter] public Guid CompanyId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
+        Parameters = await ParameterService.GetList<GetParametersListQuery>(
+            new GetParametersListQuery() { CompanyId = CompanyId }
+            );
         Parameters = Parameters.OrderBy(c => c.ExternalId);
+        
+        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
+            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId }
+            );
     }
 
     private async Task AddParameter()
@@ -86,7 +103,67 @@
         modal.Close(modalResult);
         Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
         Parameters = Parameters.OrderBy(c => c.ExternalId);
+        
+        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
+            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
     }
+    
+    private async Task EditParameter(ParameterDto parameter)
+    {
+        var parameters = new ModalParameters().Add("Parameter", parameter);
+        var modal = Modal.Show<EditParameterModal>("Изменить",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            var parameterByDescriptions =(ParameterByDescriptionsDto)(modalResult.Data);
+            var parameterCommand = new UpdateParameterCommand()
+            {
+                Id = parameter.Id,
+                CompanyId = CompanyId,
+                ExternalId = parameter.ExternalId,
+                ParameterGroupId = parameter.ParameterGroupId,
+                ValueType = parameter.ValueType
+            };
+
+            await ParameterService.Update<UpdateParameterCommand>(parameterCommand);
+
+            if (ParameterDescriptions.FirstOrDefault(c => c.ParameterId == parameterByDescriptions.ParameterId) == null)
+            {
+                var descriptionCommand = new CreateParameterDescriptionCommand()
+                {
+                    RusDescription = parameterByDescriptions.RusDescription,
+                    UkrDescription = parameterByDescriptions.UkrDescription,
+                    ParameterId = parameterByDescriptions.ParameterId
+                };
+
+                await ParameterDescriptionService.Create<CreateParameterDescriptionCommand>(descriptionCommand);
+            }
+            else
+            {
+                var descriptionCommand = new UpdateParameterDescriptionCommand()
+                {
+                    RusDescription = parameterByDescriptions.RusDescription,
+                    UkrDescription = parameterByDescriptions.UkrDescription,
+                    ParameterId = parameterByDescriptions.ParameterId,
+                    Id = ParameterDescriptions.First(c => c.ParameterId == parameterByDescriptions.ParameterId).Id
+                };
+
+                await ParameterDescriptionService.Update<UpdateParameterDescriptionCommand>(descriptionCommand);
+            }
+           
+
+        }
+        
+        modal.Close(modalResult);
+        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
+        Parameters = Parameters.OrderBy(c => c.ExternalId);
+
+        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
+            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+
+    }
+
     
     private async Task DeleteParameter(ParameterDto parameter)
     {
@@ -102,6 +179,9 @@
         modal.Close(modalResult);
         Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
         Parameters = Parameters.OrderBy(c => c.ExternalId);
+        
+        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
+            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
     }
 
 }

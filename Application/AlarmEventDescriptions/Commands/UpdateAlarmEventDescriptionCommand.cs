@@ -5,7 +5,11 @@ namespace VG.CDF.Client.Application.AlarmEventDescriptions.Commands;
 
 public class UpdateAlarmEventDescriptionCommand : EntityBaseDto
 {
-    public string Description { get; set; } = string.Empty;
+    public string RusDescription { get; set; } = String.Empty;
+        
+    public string EngDescription { get; set; }= String.Empty;
+        
+    public string UkrDescription { get; set; }= String.Empty;
 
     public Guid AlarmEventId { get; set; }
     

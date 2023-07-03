@@ -44,6 +44,10 @@ namespace VG.CDF.Client.Extensions
             services.AddTransient<IParameterGroupService, ParameterGroupService>();
             services.AddTransient<IWebApiService<ParameterGroupDto>, WebApiService<ParameterGroupDto>>();
             services.AddTransient<ICrudService<ParameterGroupDto>, CrudService<ParameterGroupDto>>();
+            
+            services.AddTransient<IParameterDescriptionService, ParameterDescriptionService>();
+            services.AddTransient<IWebApiService<ParameterDescriptionDto>, WebApiService<ParameterDescriptionDto>>();
+            services.AddTransient<ICrudService<ParameterDescriptionDto>, CrudService<ParameterDescriptionDto>>();
             //services.AddScoped<ClientAuthenticationStateProvider>();
             //services.AddScoped<AuthenticationStateProvider>(provider =>
                 //provider.GetRequiredService<ClientAuthenticationStateProvider>());
