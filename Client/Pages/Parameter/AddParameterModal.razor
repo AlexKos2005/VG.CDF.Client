@@ -1,0 +1,55 @@
+﻿@page "/addparameter"
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Enums
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.ParameterGroups.Queries
+@using Color = MudBlazor.Color
+@inject IParameterGroupService ParameterGroupService
+
+<MudNumericField @bind-Value="@ExternalId" Label="Ид параметра" Variant="Variant.Outlined" Min="1"></MudNumericField>
+<MudSelect T="ParameterValueType" @bind-Value="@ValueType" Label="Тип параметра" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+    <MudSelectItem Value="@(ParameterValueType.DateTime)" />
+    <MudSelectItem Value="@(ParameterValueType.String)" />
+    <MudSelectItem Value="@(ParameterValueType.Double)" />
+</MudSelect>
+<MudSelect T="string" @bind-Value="@ParameterGroupName" Label="Группа параметров" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+    @foreach (var group in ParameterGroups)
+    {
+        <MudSelectItem Value="@group.Name"/>
+    }
+</MudSelect>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    
+    [Parameter] public Guid CompanyId { get; set; }
+    [Parameter] public int PrevExtId { get; set; }
+    private int ExternalId { get; set; }
+    private ParameterValueType ValueType { get; set; }
+    private string ParameterGroupName { get; set; } = String.Empty;
+
+    private IEnumerable<ParameterGroupDto> ParameterGroups { get; set; } = new List<ParameterGroupDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ParameterGroups = await ParameterGroupService.GetList<GetParameterGroupsListQuery>(new GetParameterGroupsListQuery());
+    }
+
+    private async Task SubmitForm()
+    {
+        var parameter = new ParameterDto()
+        {
+            CompanyId = CompanyId,
+            ExternalId = ExternalId,
+            ValueType = ValueType,
+            ParameterGroupId = ParameterGroups.Where(c=>c.Name == ParameterGroupName).Select(c=>c.Id).First()
+        };
+        
+        await BlazoredModal.CloseAsync(ModalResult.Ok(parameter));
+    }
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+
+}

@@ -1,0 +1,107 @@
+﻿@using VG.CDF.Client.Infrastructure.Services.RestApi.Admin
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.Parameters.Commands
+@using VG.CDF.Client.Application.Parameters.Queries
+@inject IParameterService ParameterService
+@inject IParameterGroupService ParameterGroupService
+@inject IModalService Modal
+
+
+<MudTable Striped="true" Bordered="true" Items="@Parameters"
+          Dense="@dense"
+          Hover="@hover">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Параметры</MudText>
+        <MudSpacer/>
+        <MudIconButton Icon="fa-solid fa-plus" Color="MudBlazor.Color.Primary" @onclick="@AddParameter" Title="Добавить">Добавить параметр</MudIconButton>
+    </ToolBarContent>
+    <ColGroup>
+        <col style="width: 50px"/>
+        <col style="width: 150px"/>
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>
+            Внешний ИД
+        </MudTh>
+        <MudTh>
+            Название RU
+        </MudTh>
+        <MudTh>
+            Название U
+        </MudTh>
+        <MudTh>
+            Действия
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="name">@context.ExternalId</MudTd>
+        <MudTd DataLabel="RU"></MudTd>
+        <MudTd DataLabel="Uk"></MudTd>
+        <MudTd>
+            <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteParameter(@context))" Title="Удалить"></MudIconButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+    
+
+
+
+@code
+{
+    private bool dense = false;
+    private bool hover = true;
+
+    public IEnumerable<ParameterDto> Parameters { get; set; } = new List<ParameterDto>();
+
+    [Parameter] public Guid CompanyId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
+        Parameters = Parameters.OrderBy(c => c.ExternalId);
+    }
+
+    private async Task AddParameter()
+    {
+        var parameters = new ModalParameters().Add("CompanyId", CompanyId);
+        var modal = Modal.Show<AddParameterModal>("Создать",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            var parameter =(ParameterDto)(modalResult.Data);
+            var command = new CreateParameterCommand()
+            {
+                CompanyId = CompanyId,
+                ExternalId = parameter.ExternalId,
+                ParameterGroupId = parameter.ParameterGroupId,
+                ValueType = parameter.ValueType
+            };
+
+            await ParameterService.Create<CreateParameterCommand>(command);
+
+        }
+        
+        modal.Close(modalResult);
+        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
+        Parameters = Parameters.OrderBy(c => c.ExternalId);
+    }
+    
+    private async Task DeleteParameter(ParameterDto parameter)
+    {
+        var parameters = new ModalParameters().Add("Parameter", parameter);
+        var modal = Modal.Show<DeleteParameterModal>("Удалить",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            await ParameterService.Delete<string>(parameter.Id.ToString());
+        }
+        
+        modal.Close(modalResult);
+        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
+        Parameters = Parameters.OrderBy(c => c.ExternalId);
+    }
+
+}

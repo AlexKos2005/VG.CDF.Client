@@ -9,9 +9,10 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 
 public class RoleService : WebApiServiceBase<RoleDto>,IRoleService
 {
-    private const string _uri = "api/admin/Role/";
+    protected const string _urn = "api/admin/Role/";
 
     public RoleService(ICrudService<RoleDto> crudService) : base(crudService)
     {
+        base.Urn = _urn;
     }
 }

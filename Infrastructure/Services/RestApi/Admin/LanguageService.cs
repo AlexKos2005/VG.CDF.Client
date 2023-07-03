@@ -9,7 +9,7 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 
 public class LanguageService : WebApiServiceBase<LanguageDto>,ILanguageService
 {
-    private const string _urn = "api/admin/Language/";
+    protected const string _urn = "api/admin/Language/";
 
     public LanguageService(ICrudService<LanguageDto> crudService) : base(crudService)
     {

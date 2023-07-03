@@ -9,7 +9,7 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 
 public class UserService : WebApiServiceBase<UserDto>,IUserService
 {
-    private const string _urn = "api/admin/User/";
+    protected const string _urn = "api/admin/User/";
 
     public UserService(ICrudService<UserDto> crudService) : base(crudService)
     {

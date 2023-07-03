@@ -9,7 +9,7 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 
 public class SignUpService : WebApiServiceBase<UserDto>,ISignUpService
 {
-    private const string _urn = "api/SignUp/";
+    protected const string _urn = "api/SignUp/";
 
     public SignUpService(ICrudService<UserDto> crudService) : base(crudService)
     {

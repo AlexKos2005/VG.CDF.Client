@@ -1,0 +1,27 @@
+﻿@page "/deleteparameter"
+@using VG.CDF.Client.Application.Dto
+@using Color = MudBlazor.Color
+<h3>Вы действительно хотите удалить параметр @ParameterName?</h3>
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    
+
+    [Parameter]
+    public ParameterDto Parameter { get; set; }
+
+    protected string ParameterName { get; set; } = null;
+
+    protected override void OnInitialized()
+    {
+        ParameterName = Parameter.ExternalId.ToString();
+    }
+    
+    private async Task SubmitForm() => await BlazoredModal.CloseAsync(ModalResult.Ok());
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+
+}

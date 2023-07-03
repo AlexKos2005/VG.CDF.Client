@@ -26,15 +26,13 @@
         <MudTd DataLabel="name">@context.Name</MudTd>
         <MudTd>
             <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditCompany(context))" Title="Изменить название"></MudIconButton>
-            <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Primary" @onclick="@(e=>DeleteCompany(context))" Title="Удалить"></MudIconButton>
+            <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteCompany(context))" Title="Удалить"></MudIconButton>
             <MudIconButton Icon="fas fa-file-invoice" Color="MudBlazor.Color.Primary" Title="Проекты"></MudIconButton>
-            <MudIconButton Icon="fas fa-file-invoice" Color="MudBlazor.Color.Primary" Title="Параметры"></MudIconButton>
+            <MudIconButton Icon="fas fa-file-invoice" Color="MudBlazor.Color.Primary" @onclick="@(e=>ShowParametersList(context))" Title="Параметры"></MudIconButton>
         </MudTd>
     </RowTemplate>
 </MudTable>
     
-
-
 
 @code
 {
@@ -42,43 +40,3 @@
     private bool hover = true;
     
 }
-
-@*<MudGrid>
-    <MudItem xs="12" sm="6" md="4">
-        <MudSelect Label=@Localizer["Language"].Value T="string" >
-           
-        </MudSelect>
-    </MudItem>
-</MudGrid>
-
-<MudTable Items="@Companies">
-    <ColGroup>
-        <col style="width:100px;" />
-    </ColGroup>
-    <RowTemplate>
-        <MudTd>@context.Name</MudTd>
-    </RowTemplate>
-   
-</MudTable>
-
-
-
-<MudDataGrid T="@CompanyDto" Items="@Companies">
-    <Columns>
-        <PropertyColumn Property="x => x.Name" Title="Name" IsEditable="false" />
-        <EditTemplate>
-                <MudSelect @bind-Value="context.Item.Position" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
-                    <MudSelectItem Value="0">zero</MudSelectItem>
-                    <MudSelectItem Value="1">one</MudSelectItem>
-                    <MudSelectItem Value="17">seventeen</MudSelectItem>
-                </MudSelect>
-            </EditTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.Molar" Title="Molar mass" />
-        <TemplateColumn Hidden="@(_isCellEditMode || _readOnly || _editTriggerRowEditCompany)" CellClass="d-flex justify-end">
-            <CellTemplate>
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnEditCompany="@context.Item.Positio.Actions.StartEditingItemAsync" />
-            </CellTemplate>
-        </TemplateColumn>
-    </Columns>
-</MudDataGrid>*@

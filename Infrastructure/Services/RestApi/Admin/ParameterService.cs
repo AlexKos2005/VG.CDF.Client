@@ -9,9 +9,10 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 
 public class ParameterService : WebApiServiceBase<ParameterDto>,IParameterService
 {
-    private const string _uri = "api/admin/Parameter/";
+    protected const string _urn = "api/admin/Parameter/";
 
     public ParameterService(ICrudService<ParameterDto> crudService) : base(crudService)
     {
+        base.Urn = _urn;
     }
 }

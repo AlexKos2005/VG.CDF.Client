@@ -9,9 +9,10 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 
 public class WorkEmailService : WebApiServiceBase<WorkEmailDto>,IWorkEmailService
 {
-    private const string _uri = "api/admin/WorkEmail/";
+    protected const string _urn = "api/admin/WorkEmail/";
 
     public WorkEmailService(ICrudService<WorkEmailDto> crudService) : base(crudService)
     {
+        base.Urn = _urn;
     }
 }

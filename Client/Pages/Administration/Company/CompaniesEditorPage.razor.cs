@@ -9,6 +9,7 @@ using VG.CDF.Client.Application.Companies.Commands;
 using VG.CDF.Client.Application.Companies.Queries;
 using VG.CDF.Client.Application.Dto;
 using VG.CDF.Client.Application.Interfaces.Services;
+using VG.CDF.Client.Pages.Parameter;
 
 namespace VG.CDF.Client.Pages.Administration.Company;
 
@@ -75,8 +76,14 @@ public partial class CompaniesEditorPage
     }
 
 
-    protected void DD(CompanyDto companyDto)
+    protected async Task ShowParametersList(CompanyDto companyDto)
     {
+        var parameters = new ModalParameters().Add("CompanyId", companyDto.Id);
+        var modal = Modal.Show<ParametersListModal>("Параметры",parameters);
+        var modalResult = await modal.Result;
+
+        modal.Close(modalResult);
         
+        Companies = await CompanyService.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery() { });
     }
 }

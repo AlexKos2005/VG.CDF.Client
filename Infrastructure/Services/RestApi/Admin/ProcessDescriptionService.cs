@@ -9,9 +9,10 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 
 public class ProcessDescriptionService : WebApiServiceBase<ProcessDescriptionDto>,IProcessDescriptionService
 {
-    private const string _uri = "api/admin/ProcessDescription/";
+    protected const string _urn = "api/admin/ProcessDescription/";
 
     public ProcessDescriptionService(ICrudService<ProcessDescriptionDto> crudService) : base(crudService)
     {
+        base.Urn = _urn;
     }
 }

@@ -9,9 +9,10 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 
 public class ProjectService : WebApiServiceBase<ProjectDto>,IProjectService
 {
-    private const string _uri = "api/admin/Project/";
+    protected const string _urn = "api/admin/Project/";
 
     public ProjectService(ICrudService<ProjectDto> crudService) : base(crudService)
     {
+        base.Urn = _urn;
     }
 }

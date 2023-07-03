@@ -9,9 +9,10 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 
 public class ParameterGroupService : WebApiServiceBase<ParameterGroupDto>,IParameterGroupService
 {
-    private const string _uri = "api/admin/ParameterGroup/";
+    protected const string _urn = "api/admin/ParameterGroup/";
 
     public ParameterGroupService(ICrudService<ParameterGroupDto> crudService) : base(crudService)
     {
+        base.Urn = _urn;
     }
 }
