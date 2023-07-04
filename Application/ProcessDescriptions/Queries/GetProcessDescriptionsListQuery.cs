@@ -10,7 +10,8 @@ public class GetProcessDescriptionsListQuery
     public string? EngDescription { get; set; } = null;
         
     public string? UkrDescription { get; set; } = null;
-        
+    
+    public Guid? ProjectId { get; set; } = null;
     public Guid? ProcessId { get; set; } = null;
     
 }

@@ -1,12 +1,10 @@
-﻿@using VG.CDF.Client.Infrastructure.Services.RestApi.Admin
-@using VG.CDF.Client.Application.Dto
+﻿@using VG.CDF.Client.Application.Dto
 @using VG.CDF.Client.Application.Interfaces.Services
-@using VG.CDF.Client.Application.Languages.Queries
-@using VG.CDF.Client.Application.ParameterDescriptions.Commands
-@using VG.CDF.Client.Application.ParameterDescriptions.Queries
-@using VG.CDF.Client.Application.Parameters.Commands
-@using VG.CDF.Client.Application.Parameters.Queries
+@using VG.CDF.Client.Application.ProcessDescriptions.Commands
+@using VG.CDF.Client.Application.ProcessDescriptions.Queries
 @using VG.CDF.Client.Application.Processes.Commands
+@using VG.CDF.Client.Application.Processes.Queries
+@using VG.CDF.Client.Pages.Administration.Parameter
 @inject IProcessService ProcessService
 @inject IProcessDescriptionService ProcessDescriptionService
 @inject IModalService Modal
@@ -18,7 +16,7 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">Процессы</MudText>
         <MudSpacer/>
-        <MudIconButton Icon="fa-solid fa-plus" Color="MudBlazor.Color.Primary" @onclick="@AddParameter" Title="Добавить">Добавить процесс</MudIconButton>
+        <MudIconButton Icon="fa-solid fa-plus" Color="MudBlazor.Color.Primary" @onclick="@AddProcess" Title="Добавить">Добавить процесс</MudIconButton>
     </ToolBarContent>
     <ColGroup>
         <col style="width: 50px"/>
@@ -49,8 +47,8 @@
             @ProcessDescriptions.FirstOrDefault(c => c.ProcessId == @context.Id)?.UkrDescription
             </MudTd>
         <MudTd>
-            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditParameter(@context))" Title="Изменить"></MudIconButton>
-             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteParameter(@context))" Title="Удалить"></MudIconButton>
+            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditProcess(@context))" Title="Изменить"></MudIconButton>
+             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteProcess(@context))" Title="Удалить"></MudIconButton>
         </MudTd>
     </RowTemplate>
 </MudTable>
@@ -95,51 +93,46 @@
         await UpdateViewModels();
     }
     
-    private async Task EditParameter(ParameterDto parameter)
+    private async Task EditProcess(ProcessDto process)
     {
-        var parameters = new ModalParameters().Add("Parameter", parameter);
-        var modal = Modal.Show<EditParameterModal>("Изменить",parameters);
+        var parameters = new ModalParameters().Add("Parameter", process);
+        var modal = Modal.Show<EditProcessModal>("Изменить",parameters);
         var modalResult = await modal.Result;
 
         if (modalResult.Confirmed)
         {
-            var parameterByDescriptions =(ParameterByDescriptionsDto)(modalResult.Data);
-            var parameterCommand = new UpdateParameterCommand()
+            var processByDescriptions =(ProcessByDescriptionsDto)(modalResult.Data);
+            var processCommand = new UpdateProcessCommand()
             {
-                Id = parameter.Id,
-                CompanyId = CompanyId,
-                ExternalId = parameter.ExternalId,
-                ParameterGroupId = parameter.ParameterGroupId,
-                ValueType = parameter.ValueType
+                Id = process.Id,
+                ExternalId = process.ExternalId
             };
 
-            await ParameterService.Update<UpdateParameterCommand>(parameterCommand);
+            await ProcessService.Update<UpdateProcessCommand>(processCommand);
 
-            if (ParameterDescriptions.FirstOrDefault(c => c.ParameterId == parameterByDescriptions.ParameterId) == null)
+            if (ProcessDescriptions.FirstOrDefault(c => c.ProcessId == processByDescriptions.ProjectId) == null)
             {
-                var descriptionCommand = new CreateParameterDescriptionCommand()
+                var descriptionCommand = new CreateProcessDescriptionCommand()
                 {
-                    RusDescription = parameterByDescriptions.RusDescription,
-                    UkrDescription = parameterByDescriptions.UkrDescription,
-                    ParameterId = parameterByDescriptions.ParameterId
+                    RusDescription = processByDescriptions.RusDescription,
+                    UkrDescription = processByDescriptions.UkrDescription,
+                    ProcessId = processByDescriptions.ProcessId
                 };
 
-                await ParameterDescriptionService.Create<CreateParameterDescriptionCommand>(descriptionCommand);
+                await ProcessDescriptionService.Create<CreateProcessDescriptionCommand>(descriptionCommand);
             }
             else
             {
-                var descriptionCommand = new UpdateParameterDescriptionCommand()
+                var descriptionCommand = new UpdateProcessDescriptionCommand()
                 {
-                    RusDescription = parameterByDescriptions.RusDescription,
-                    UkrDescription = parameterByDescriptions.UkrDescription,
-                    ParameterId = parameterByDescriptions.ParameterId,
-                    Id = ParameterDescriptions.First(c => c.ParameterId == parameterByDescriptions.ParameterId).Id
+                    RusDescription = processByDescriptions.RusDescription,
+                    UkrDescription = processByDescriptions.UkrDescription,
+                    ProcessId = processByDescriptions.ProcessId,
+                    Id = ProcessDescriptions.First(c => c.ProcessId == processByDescriptions.ProcessId).Id
                 };
 
-                await ParameterDescriptionService.Update<UpdateParameterDescriptionCommand>(descriptionCommand);
+                await ProcessDescriptionService.Update<UpdateProcessDescriptionCommand>(descriptionCommand);
             }
-           
-
         }
         
         modal.Close(modalResult);
@@ -148,15 +141,15 @@
     }
 
     
-    private async Task DeleteParameter(ParameterDto parameter)
+    private async Task DeleteProcess(ProcessDto process)
     {
-        var parameters = new ModalParameters().Add("Parameter", parameter);
+        var parameters = new ModalParameters().Add("Process", process);
         var modal = Modal.Show<DeleteParameterModal>("Удалить",parameters);
         var modalResult = await modal.Result;
 
         if (modalResult.Confirmed)
         {
-            await ParameterService.Delete<string>(parameter.Id.ToString());
+            await ProcessService.Delete<string>(process.Id.ToString());
         }
         
         modal.Close(modalResult);
@@ -166,11 +159,11 @@
     
     private async Task UpdateViewModels()
     {
-        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
-        Parameters = Parameters.OrderBy(c => c.ExternalId);
+        Processes = await ProcessService.GetList<GetProcessesListQuery>(new GetProcessesListQuery() { ProjectId = ProjectId });
+        Processes = Processes.OrderBy(c => c.ExternalId);
         
-        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
-            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+        ProcessDescriptions = await ProcessDescriptionService.GetList<GetProcessDescriptionsListQuery>(
+            new GetProcessDescriptionsListQuery() { ProjectId = ProjectId });
     }
 
 }

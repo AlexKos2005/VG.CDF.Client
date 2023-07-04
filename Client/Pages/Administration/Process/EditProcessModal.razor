@@ -1,0 +1,48 @@
+﻿@page "/editprocess"
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Interfaces.Services
+@using Color = MudBlazor.Color
+@using Microsoft.AspNetCore.Components
+@using VG.CDF.Client.Application.ProcessDescriptions.Queries
+@inject IProcessDescriptionService ProcessDescriptionService
+
+<MudNumericField @bind-Value="@Process.ExternalId" Label="Ид процесса" Variant="Variant.Outlined" Min="1"></MudNumericField>
+<MudTextField @bind-Value="@ProcessDescription.RusDescription" Label="Rus" Variant="Variant.Outlined" Min="1"></MudTextField>
+<MudTextField @bind-Value="@ProcessDescription.UkrDescription" Label="Ukr" Variant="Variant.Outlined" Min="1"></MudTextField>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    
+    [Parameter] public ProcessDto Process { get; set; }
+    public ProcessDescriptionDto ProcessDescription { get; set; } = new ProcessDescriptionDto();
+
+    private string ParameterGroupName { get; set; } = String.Empty;
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        var descriptions = await ProcessDescriptionService.GetList<GetProcessDescriptionsListQuery>(
+            new GetProcessDescriptionsListQuery() { ProcessId = Process.Id }
+            );
+        ProcessDescription = descriptions.FirstOrDefault() ?? new ProcessDescriptionDto();
+    }
+
+    private async Task SubmitForm()
+    {
+        var processByDescriptions = new ProcessByDescriptionsDto()
+        {
+            ProcessId = Process.Id,
+            ProjectId = Process.ProjectId,
+            ExternalId = Process.ExternalId,
+            RusDescription = ProcessDescription.RusDescription,
+            UkrDescription = ProcessDescription.UkrDescription,
+        };
+        
+        await BlazoredModal.CloseAsync(ModalResult.Ok(processByDescriptions));
+    }
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+
+}
