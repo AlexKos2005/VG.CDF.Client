@@ -14,4 +14,6 @@ public class GetParametersListQuery
 
     public Guid? ParameterGroupId { get; set; } = null;
     
+    public Guid? ProcessId { get; set; } = null;
+    
 }

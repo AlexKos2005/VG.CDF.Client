@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
@@ -9,6 +10,8 @@ namespace VG.CDF.Client.Application.Processes.Commands;
 public class UpdateProcessCommand : EntityBaseDto
 {
     public int ExternalId { get; set; }
-    public string Name { get; set; } = string.Empty;
+    public int DeviceCode { get; set; }
+    public string DeviceIp { get; set; } = string.Empty;
+    public Guid ProjectId { get; set; }
     
 }

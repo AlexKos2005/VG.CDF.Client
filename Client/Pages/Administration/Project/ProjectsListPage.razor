@@ -3,6 +3,7 @@
 @using VG.CDF.Client.Application.Dto
 @using VG.CDF.Client.Application.Projects.Commands
 @using VG.CDF.Client.Application.Projects.Queries
+@using VG.CDF.Client.Pages.Administration.Process
 @inject IProjectService ProjectService
 @inject IModalService Modal
 
@@ -41,7 +42,7 @@
             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteProject(@context))" Title="Удалить"></MudIconButton>
         </MudTd>
         <MudTd>
-            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary"  Title="Процессы"></MudIconButton>
+            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary"  @onclick="@(e=>ShowProcesses(@context))" Title="Процессы"></MudIconButton>
         </MudTd>
     </RowTemplate>
 </MudTable>
@@ -123,6 +124,17 @@
         }
         
         modal.Close(modalResult);
+        await UpdateViewModels();
+    }
+    
+    private async Task ShowProcesses(ProjectDto project)
+    {
+        var parameters = new ModalParameters().Add("ProjectId", project.Id);
+        var modal = Modal.Show<ProcessesListModal>("",parameters);
+        var modalResult = await modal.Result;
+
+        modal.Close(modalResult);
+
         await UpdateViewModels();
     }
 
