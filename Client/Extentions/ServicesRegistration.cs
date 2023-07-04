@@ -37,6 +37,14 @@ namespace VG.CDF.Client.Extensions
             services.AddTransient<IWebApiService<CompanyDto>, WebApiService<CompanyDto>>();
             services.AddTransient<ICrudService<CompanyDto>, CrudService<CompanyDto>>();
             
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IWebApiService<ProjectDto>, WebApiService<ProjectDto>>();
+            services.AddTransient<ICrudService<ProjectDto>, CrudService<ProjectDto>>();
+            
+            services.AddTransient<IProcessService, ProcessService>();
+            services.AddTransient<IWebApiService<ProcessDto>, WebApiService<ProcessDto>>();
+            services.AddTransient<ICrudService<ProcessDto>, CrudService<ProcessDto>>();
+            
             services.AddTransient<IParameterService, ParameterService>();
             services.AddTransient<IWebApiService<ParameterDto>, WebApiService<ParameterDto>>();
             services.AddTransient<ICrudService<ParameterDto>, CrudService<ParameterDto>>();
@@ -56,6 +64,10 @@ namespace VG.CDF.Client.Extensions
             services.AddTransient<IAlarmEventDescriptionService, AlarmEventDescriptionService>();
             services.AddTransient<IWebApiService<AlarmEventDescriptionDto>, WebApiService<AlarmEventDescriptionDto>>();
             services.AddTransient<ICrudService<AlarmEventDescriptionDto>, CrudService<AlarmEventDescriptionDto>>();
+            
+            services.AddTransient<IProcessDescriptionService, ProcessDescriptionService>();
+            services.AddTransient<IWebApiService<ProcessDescriptionDto>, WebApiService<ProcessDescriptionDto>>();
+            services.AddTransient<ICrudService<ProcessDescriptionDto>, CrudService<ProcessDescriptionDto>>();
             //services.AddScoped<ClientAuthenticationStateProvider>();
             //services.AddScoped<AuthenticationStateProvider>(provider =>
                 //provider.GetRequiredService<ClientAuthenticationStateProvider>());

@@ -1,0 +1,161 @@
+﻿@page "/projects/{companyid:guid}"
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Projects.Commands
+@using VG.CDF.Client.Application.Projects.Queries
+@inject IProjectService ProjectService
+@inject IModalService Modal
+
+<MudTable Striped="true" Bordered="true" Items="@Projects"
+          Dense="@dense"
+          Hover="@hover">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Проекты</MudText>
+        <MudSpacer/>
+        <MudIconButton Icon="fa-solid fa-plus" Color="MudBlazor.Color.Primary" @onclick="@AddProject" Title="Добавить">Добавить проект</MudIconButton>
+    </ToolBarContent>
+    <ColGroup>
+        <col style="width: 50px"/>
+        <col style="width: 150px"/>
+        <col style="width: 150px"/>
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>
+            Внешний ИД
+        </MudTh>
+        <MudTh>
+            Название
+        </MudTh>
+        <MudTh>
+            Действия
+        </MudTh>
+        <MudTh>
+            Процессы
+            </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="name">@context.ExternalId</MudTd>
+         <MudTd>@context.Description</MudTd>
+        <MudTd>
+            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditProject(@context))" Title="Изменить"></MudIconButton>
+            <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteProject(@context))" Title="Удалить"></MudIconButton>
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary"  Title="Процессы"></MudIconButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    
+    private bool dense = false;
+    private bool hover = true;
+    [Parameter] public Guid CompanyId { get; set; }
+
+    protected IEnumerable<ProjectDto> Projects { get; set; } = new List<ProjectDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateViewModels();
+    }
+
+    private async Task AddProject()
+    {
+        var parameters = new ModalParameters().Add("CompanyId", CompanyId);
+        var modal = Modal.Show<AddProjectModal>("Создать",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            var parameter =(ProjectDto)(modalResult.Data);
+            var command = new CreateProjectCommand()
+            {
+                CompanyId = CompanyId,
+                ExternalId = parameter.ExternalId,
+                Description = parameter.Description,
+            };
+
+            await ProjectService.Create<CreateProjectCommand>(command);
+
+        }
+        
+        modal.Close(modalResult);
+
+        await UpdateViewModels();
+    }
+    
+    private async Task EditProject(ProjectDto project)
+    {
+        var parameters = new ModalParameters().Add("Project", project);
+        var modal = Modal.Show<EditProjectModal>("Изменить",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            var editedProject =(ProjectDto)(modalResult.Data);
+            var projectCommand = new UpdateProjectCommand()
+            {
+                Id = project.Id,
+                ExternalId = editedProject.ExternalId,
+                Description = editedProject.Description
+                
+            };
+
+            await ProjectService.Update<UpdateProjectCommand>(projectCommand);
+            
+
+        }
+        
+        modal.Close(modalResult);
+        await UpdateViewModels();
+
+    }
+    
+    private async Task DeleteProject(ProjectDto project)
+    {
+        var parameters = new ModalParameters().Add("Project", project);
+        var modal = Modal.Show<DeleteProjectModal>("Удалить",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            await ProjectService.Delete<string>(project.Id.ToString());
+        }
+        
+        modal.Close(modalResult);
+        await UpdateViewModels();
+    }
+
+    private async Task UpdateViewModels()
+    {
+        Projects = await ProjectService.GetList<GetProjectsListQuery>(new GetProjectsListQuery());
+        Projects = Projects.OrderBy(c => c.ExternalId);
+    }
+
+}
+
+
+
+@*<MudPaper Class="pa-16 ma-2" Elevation="3">
+    <div style="display: flex;justify-content: space-between">
+        <MudText Typo="Typo.h6">Проекты</MudText>
+        <MudIconButton Icon="fa-solid fa-plus" Color="MudBlazor.Color.Primary" @onclick="@(e=>AddProject())" Title="Добавить">Добавить проект</MudIconButton>
+    </div>
+
+
+    <MudExpansionPanels MultiExpansion="true">
+    @foreach (var proj in Projects)
+        {
+            <MudExpansionPanel Text="@proj.Description" MaxHeight="150">
+                            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary"  Title="Изменить"></MudIconButton>
+                             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error"  Title="Удалить"></MudIconButton>
+                <MudExpansionPanels MultiExpansion="true">
+                    @for (int i = 0; i < 10; i++)
+                    {
+                        <ProjectComponent ProjectId="@proj.Id"></ProjectComponent>
+                    }
+                </MudExpansionPanels>
+            </MudExpansionPanel>
+        }
+    </MudExpansionPanels>
+</MudPaper>*@

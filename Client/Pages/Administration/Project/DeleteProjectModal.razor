@@ -1,7 +1,7 @@
-﻿@page "/deletealarmevent"
+﻿@page "/deleteproject"
 @using VG.CDF.Client.Application.Dto
 @using Color = MudBlazor.Color
-<h3>Вы действительно хотите удалить аварийное событие @AlarmEvent.ExternalId?</h3>
+<h3>Вы действительно хотите удалить проект @Project.Description?</h3>
 
     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
@@ -12,14 +12,7 @@
     
 
     [Parameter]
-    public AlarmEventDto AlarmEvent { get; set; }
-
-    protected string AlarmEventName { get; set; } = null;
-
-    protected override void OnInitialized()
-    {
-        AlarmEventName = AlarmEvent.ExternalId.ToString();
-    }
+    public ProjectDto Project { get; set; }
     
     private async Task SubmitForm() => await BlazoredModal.CloseAsync(ModalResult.Ok());
     private async Task Cancel() => await BlazoredModal.CancelAsync();

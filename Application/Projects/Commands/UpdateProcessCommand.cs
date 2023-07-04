@@ -8,6 +8,7 @@ namespace VG.CDF.Client.Application.Projects.Commands;
 
 public class UpdateProjectCommand : EntityBaseDto
 {
-    public string Name { get; set; } = string.Empty;
+    public int ExternalId { get; set; }
+    public string Description { get; set; } = string.Empty;
     
 }

@@ -1,0 +1,32 @@
+﻿@page "/addprocess"
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Enums
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.ParameterGroups.Queries
+@using Color = MudBlazor.Color
+
+<MudNumericField @bind-Value="@ExternalId" Label="Ид процесса" Variant="Variant.Outlined" Min="1"></MudNumericField>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    
+    [Parameter] public Guid ProjectId { get; set; }
+    private int ExternalId { get; set; }
+    
+ 
+    private async Task SubmitForm()
+    {
+        var process = new ProcessDto()
+        {
+            ProjectId = ProjectId,
+            ExternalId = ExternalId
+        };
+        
+        await BlazoredModal.CloseAsync(ModalResult.Ok(process));
+    }
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+
+}

@@ -16,6 +16,8 @@ namespace VG.CDF.Client.Pages.Administration.Company;
 
 public partial class CompaniesEditorPage
 {
+    [Inject]
+    protected NavigationManager NavigationManager { get; set; }
     [Inject] protected ICompanyService CompanyService { get; set; }
     
     [Inject] protected IStringLocalizer<CompaniesEditorPage> Localizer { get; set; }

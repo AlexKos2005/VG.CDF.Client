@@ -1,0 +1,176 @@
+﻿@using VG.CDF.Client.Infrastructure.Services.RestApi.Admin
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.Languages.Queries
+@using VG.CDF.Client.Application.ParameterDescriptions.Commands
+@using VG.CDF.Client.Application.ParameterDescriptions.Queries
+@using VG.CDF.Client.Application.Parameters.Commands
+@using VG.CDF.Client.Application.Parameters.Queries
+@using VG.CDF.Client.Application.Processes.Commands
+@inject IProcessService ProcessService
+@inject IProcessDescriptionService ProcessDescriptionService
+@inject IModalService Modal
+
+
+<MudTable Striped="true" Bordered="true" Items="@Processes"
+          Dense="@dense"
+          Hover="@hover">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Процессы</MudText>
+        <MudSpacer/>
+        <MudIconButton Icon="fa-solid fa-plus" Color="MudBlazor.Color.Primary" @onclick="@AddParameter" Title="Добавить">Добавить процесс</MudIconButton>
+    </ToolBarContent>
+    <ColGroup>
+        <col style="width: 50px"/>
+        <col style="width: 150px"/>
+        <col style="width: 150px"/>
+        <col style="width: 150px"/>
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>
+            Внешний ИД
+        </MudTh>
+        <MudTh>
+            Название RU
+        </MudTh>
+        <MudTh>
+            Название Ukr
+        </MudTh>
+        <MudTh>
+            Действия
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="name">@context.ExternalId</MudTd>
+         <MudTd DataLabel="RU">
+             @ProcessDescriptions.FirstOrDefault(c => c.ProcessId == @context.Id)?.RusDescription
+             </MudTd>
+        <MudTd DataLabel="Ukr">
+            @ProcessDescriptions.FirstOrDefault(c => c.ProcessId == @context.Id)?.UkrDescription
+            </MudTd>
+        <MudTd>
+            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditParameter(@context))" Title="Изменить"></MudIconButton>
+             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteParameter(@context))" Title="Удалить"></MudIconButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+
+@code
+{
+    private bool dense = false;
+    private bool hover = true;
+    
+    public IEnumerable<ProcessDto> Processes { get; set; } = new List<ProcessDto>();
+    public IEnumerable<ProcessDescriptionDto> ProcessDescriptions { get; set; } = new List<ProcessDescriptionDto>();
+    
+
+    [Parameter] public Guid ProjectId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateViewModels();
+    }
+
+    private async Task AddProcess()
+    {
+        var parameters = new ModalParameters().Add("ProjectId", ProjectId);
+        var modal = Modal.Show<AddProcessModal>("Создать",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            var process =(ProcessDto)(modalResult.Data);
+            var command = new CreateProcessCommand()
+            {
+                ProjectId = process.ProjectId,
+                ExternalId = process.ExternalId,
+            };
+
+            await ProcessService.Create<CreateProcessCommand>(command);
+
+        }
+        
+        modal.Close(modalResult);
+        await UpdateViewModels();
+    }
+    
+    private async Task EditParameter(ParameterDto parameter)
+    {
+        var parameters = new ModalParameters().Add("Parameter", parameter);
+        var modal = Modal.Show<EditParameterModal>("Изменить",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            var parameterByDescriptions =(ParameterByDescriptionsDto)(modalResult.Data);
+            var parameterCommand = new UpdateParameterCommand()
+            {
+                Id = parameter.Id,
+                CompanyId = CompanyId,
+                ExternalId = parameter.ExternalId,
+                ParameterGroupId = parameter.ParameterGroupId,
+                ValueType = parameter.ValueType
+            };
+
+            await ParameterService.Update<UpdateParameterCommand>(parameterCommand);
+
+            if (ParameterDescriptions.FirstOrDefault(c => c.ParameterId == parameterByDescriptions.ParameterId) == null)
+            {
+                var descriptionCommand = new CreateParameterDescriptionCommand()
+                {
+                    RusDescription = parameterByDescriptions.RusDescription,
+                    UkrDescription = parameterByDescriptions.UkrDescription,
+                    ParameterId = parameterByDescriptions.ParameterId
+                };
+
+                await ParameterDescriptionService.Create<CreateParameterDescriptionCommand>(descriptionCommand);
+            }
+            else
+            {
+                var descriptionCommand = new UpdateParameterDescriptionCommand()
+                {
+                    RusDescription = parameterByDescriptions.RusDescription,
+                    UkrDescription = parameterByDescriptions.UkrDescription,
+                    ParameterId = parameterByDescriptions.ParameterId,
+                    Id = ParameterDescriptions.First(c => c.ParameterId == parameterByDescriptions.ParameterId).Id
+                };
+
+                await ParameterDescriptionService.Update<UpdateParameterDescriptionCommand>(descriptionCommand);
+            }
+           
+
+        }
+        
+        modal.Close(modalResult);
+        await UpdateViewModels();
+
+    }
+
+    
+    private async Task DeleteParameter(ParameterDto parameter)
+    {
+        var parameters = new ModalParameters().Add("Parameter", parameter);
+        var modal = Modal.Show<DeleteParameterModal>("Удалить",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            await ParameterService.Delete<string>(parameter.Id.ToString());
+        }
+        
+        modal.Close(modalResult);
+        await UpdateViewModels();
+    }
+    
+    
+    private async Task UpdateViewModels()
+    {
+        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
+        Parameters = Parameters.OrderBy(c => c.ExternalId);
+        
+        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
+            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+    }
+
+}

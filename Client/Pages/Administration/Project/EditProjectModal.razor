@@ -1,0 +1,36 @@
+﻿@page "/editproject"
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Interfaces.Services
+@using Color = MudBlazor.Color
+@using Microsoft.AspNetCore.Components
+@using VG.CDF.Client.Application.AlarmEventDescriptions.Queries
+@inject IAlarmEventDescriptionService AlarmEventDescriptionService
+
+<MudNumericField @bind-Value="@Project.ExternalId" Label="Ид проекта" Variant="Variant.Outlined" Min="1"></MudNumericField>
+<MudTextField @bind-Value="@Project.Description" Label="Название" Variant="Variant.Outlined" Min="1"></MudTextField>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    
+    [Parameter] public ProjectDto Project { get; set; }
+    
+
+    private async Task SubmitForm()
+    {
+        var project = new ProjectDto()
+        {
+            CompanyId = Project.CompanyId,
+            ExternalId = Project.ExternalId,
+            Description = Project.Description
+
+        };
+        
+        await BlazoredModal.CloseAsync(ModalResult.Ok(project));
+    }
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+
+}
