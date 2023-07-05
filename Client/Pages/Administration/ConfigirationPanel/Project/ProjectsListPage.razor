@@ -3,7 +3,7 @@
 @using VG.CDF.Client.Application.Dto
 @using VG.CDF.Client.Application.Projects.Commands
 @using VG.CDF.Client.Application.Projects.Queries
-@using VG.CDF.Client.Pages.Administration.Process
+@using VG.CDF.Client.Pages.Administration.ConfigirationPanel.Process
 @inject IProjectService ProjectService
 @inject IModalService Modal
 
@@ -148,34 +148,9 @@
 
     private async Task UpdateViewModels()
     {
-        Projects = await ProjectService.GetList<GetProjectsListQuery>(new GetProjectsListQuery());
+        Projects = await ProjectService.GetList<GetProjectsListQuery>(new GetProjectsListQuery(){CompanyId = CompanyId});
         Projects = Projects.OrderBy(c => c.ExternalId);
     }
 
 }
 
-
-
-@*<MudPaper Class="pa-16 ma-2" Elevation="3">
-    <div style="display: flex;justify-content: space-between">
-        <MudText Typo="Typo.h6">Проекты</MudText>
-        <MudIconButton Icon="fa-solid fa-plus" Color="MudBlazor.Color.Primary" @onclick="@(e=>AddProject())" Title="Добавить">Добавить проект</MudIconButton>
-    </div>
-
-
-    <MudExpansionPanels MultiExpansion="true">
-    @foreach (var proj in Projects)
-        {
-            <MudExpansionPanel Text="@proj.Description" MaxHeight="150">
-                            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary"  Title="Изменить"></MudIconButton>
-                             <MudIconButton Icon=@Icons.Material.Outlined.DeleteByBody Color="MudBlazor.Color.Error"  Title="Удалить"></MudIconButton>
-                <MudExpansionPanels MultiExpansion="true">
-                    @for (int i = 0; i < 10; i++)
-                    {
-                        <ProjectComponent ProjectId="@proj.Id"></ProjectComponent>
-                    }
-                </MudExpansionPanels>
-            </MudExpansionPanel>
-        }
-    </MudExpansionPanels>
-</MudPaper>*@

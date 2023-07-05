@@ -1,57 +1,53 @@
 ﻿@using System.Security.Claims
+@using VG.CDF.Client.Application.Companies.Queries
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.Processes.Queries
+@using VG.CDF.Client.Application.Projects.Queries
+@inject ICompanyService CompanyService
+@inject IProjectService ProjectService
+@inject NavigationManager NavigationManager
 
     <MudNavMenu Class="top-row">
        @* <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home">Главная</MudNavLink>*@
-       <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Workspaces">Ваши предприятия</MudNavLink>
+       
+       <MudNavGroup  Title="Компании" Icon="@Icons.Filled.DashboardCustomize" Expanded="true">
+           @foreach (var company in Companies)
+           {
+               <MudNavGroup Title="@company.Name" @onclick="@(e => ShowAllProjects(@company.Id))" Match="NavLinkMatch.All" Icon="fa-solid fa-industry">
+                   @foreach (var proj in Projects.Where(c => c.CompanyId == @company.Id))
+                   {
+                       <MudNavLink OnClick="@(e => ShowOneProject(@proj.Id))" Title="" Match="NavLinkMatch.All" Icon="fa-solid fa-file">@proj.Description</MudNavLink>
+                   }
+               </MudNavGroup>
+           }
+       </MudNavGroup>
        <MudNavLink Href="/companieseditor" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Api">Администрирование</MudNavLink>
     </MudNavMenu>
-
-
-    @*<div class="top-row pl-4 navbar navbar-dark">
-        <a class="navbar-brand" href="">BreadCommunityWeb.Blz</a>
-    </div>
-    
-    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-        <ul class="">
-            <il></il>
-        </ul>
-    </div>*@
-
-
-
-
-@*<div class="top-row pl-4 navbar navbar-dark">
-        <a class="navbar-brand" href="">BreadCommunityWeb.Blz</a>
-        <button class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>*@
-
-
-@*<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-        <ul class="nav flex-column">
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="oi oi-home" aria-hidden="true"></span> Home
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="counter">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Counter
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="fetchdata">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-                </NavLink>
-            </li>
-        </ul>
-    </div>*@
 
     @code {
         private bool collapseNavMenu = true;
 
+        private IEnumerable<CompanyDto> Companies { get; set; } = new List<CompanyDto>();
+        private IEnumerable<ProjectDto> Projects { get; set; } = new List<ProjectDto>();
+
         private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+        private async Task ShowAllProjects(Guid companyId)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        
+        private async Task ShowOneProject(Guid projectId)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        protected override async Task OnInitializedAsync()
+        {
+            Companies = await CompanyService.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery());
+            Projects = await ProjectService.GetList<GetProjectsListQuery>(new GetProjectsListQuery());
+        }
+        
 
         private void ToggleNavMenu()
         {

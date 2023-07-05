@@ -74,13 +74,51 @@
     <_ContentIncludedByDefault Remove="Pages\Parameter\DeleteParameterModal.razor" />
     <_ContentIncludedByDefault Remove="Pages\Parameter\EditParameterModal.razor" />
     <_ContentIncludedByDefault Remove="Pages\Parameter\ParametersListModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Company\AddCompanyModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Company\CompaniesEditorPage.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Company\DeleteCompanyModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Company\EditCompanyModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Parameter\AddParameterModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Parameter\DeleteParameterModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Parameter\EditParameterModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Parameter\ParametersListModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Process\AddProcessModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Process\DeleteProcessModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Process\EditProcessModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Process\ProcessesListModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\ProcessParameter\AddParametersToProcessModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\ProcessParameter\DeleteParameterFromProcessModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\ProcessParameter\ProcessParametersListModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Project\AddProjectModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Project\DeleteProjectModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Project\EditProjectModal.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Administration\Project\ProjectsListPage.razor" />
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="Pages\Administration\Parameter\AddParameterModal.razor" />
-    <AdditionalFiles Include="Pages\Administration\Parameter\DeleteParameterModal.razor" />
-    <AdditionalFiles Include="Pages\Administration\Parameter\EditParameterModal.razor" />
-    <AdditionalFiles Include="Pages\Administration\Parameter\ParametersListModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\AlarmEvent\AddAlarmEventModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\AlarmEvent\AlarmEventsListModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\AlarmEvent\DeleteAlarmEventModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\AlarmEvent\EditAlarmEventModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Company\AddCompanyModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Company\CompaniesEditorPage.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Company\DeleteCompanyModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Company\EditCompanyModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\ProcessParameter\AddParametersToProcessModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\ProcessParameter\DeleteParameterFromProcessModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\ProcessParameter\ProcessParametersListModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Process\AddProcessModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Process\DeleteProcessModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Process\EditProcessModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Process\ProcessesListModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Project\AddProjectModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Project\DeleteProjectModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Project\EditProjectModal.razor" />
+    <AdditionalFiles Include="Pages\Administration\ConfigirationPanel\Project\ProjectsListPage.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Administration\ConfigirationPanel" />
   </ItemGroup>
 
 </Project>

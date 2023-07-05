@@ -9,10 +9,10 @@ using VG.CDF.Client.Application.Companies.Commands;
 using VG.CDF.Client.Application.Companies.Queries;
 using VG.CDF.Client.Application.Dto;
 using VG.CDF.Client.Application.Interfaces.Services;
-using VG.CDF.Client.Pages.Administration.AlarmEvent;
-using VG.CDF.Client.Pages.Administration.Parameter;
+using VG.CDF.Client.Pages.Administration.ConfigirationPanel.AlarmEvent;
+using VG.CDF.Client.Pages.Administration.ConfigirationPanel.Parameter;
 
-namespace VG.CDF.Client.Pages.Administration.Company;
+namespace VG.CDF.Client.Pages.Administration.ConfigirationPanel.Company;
 
 public partial class CompaniesEditorPage
 {
