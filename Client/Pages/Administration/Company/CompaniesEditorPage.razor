@@ -41,13 +41,13 @@
             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteCompany(context))" Title="Удалить"></MudIconButton>
         </MudTd>
         <MudTd>
-            <MudIconButton Icon="fa-sharp fa-solid fa-industry-windows" Color="MudBlazor.Color.Primary" @onclick="@(e=>NavigationManager.NavigateTo($"/projects/{@context.Id}"))" Title="Проекты"></MudIconButton>
+            <MudIconButton Icon="fa-solid fa-file" Color="MudBlazor.Color.Primary" @onclick="@(e=>NavigationManager.NavigateTo($"/projects/{@context.Id}"))" Title="Проекты"></MudIconButton>
         </MudTd>
         <MudTd>
-            <MudIconButton Icon="fa-sharp fa-solid fa-meter" Color="MudBlazor.Color.Primary" @onclick="@(e=>ShowParametersList(context))" Title="Параметры"></MudIconButton>
+            <MudIconButton Icon="fa-solid fa-list" Color="MudBlazor.Color.Primary" @onclick="@(e=>ShowParametersList(context))" Title="Параметры"></MudIconButton>
         </MudTd>
         <MudTd>
-            <MudIconButton Icon="fa-sharp fa-solid fa-light-emergency-on" Color="MudBlazor.Color.Primary" @onclick="@(e=>ShowAlarmEventsList(context))" Title="Аварийные события"></MudIconButton>
+            <MudIconButton Icon="fa-solid fa-car-burst" Color="MudBlazor.Color.Primary" @onclick="@(e=>ShowAlarmEventsList(context))" Title="Аварийные события"></MudIconButton>
             </MudTd>
     </RowTemplate>
 </MudTable>

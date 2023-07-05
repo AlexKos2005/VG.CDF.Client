@@ -13,4 +13,7 @@ public interface ICrudService<T>
     Task<Result<T>> Update<T>(string urn, object? content);
     
     Task<Result> Delete(string urn, object? content);
+    
+    Task<Result> DeleteByBody(string urn, object? content);
+    
 }

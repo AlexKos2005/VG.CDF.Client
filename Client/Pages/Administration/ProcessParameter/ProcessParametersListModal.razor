@@ -1,0 +1,141 @@
+﻿@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.ParameterDescriptions.Queries
+@using VG.CDF.Client.Application.Parameters.Queries
+@using VG.CDF.Client.Application.ProcessDescriptions.Commands
+@using VG.CDF.Client.Application.ProcessDescriptions.Queries
+@using VG.CDF.Client.Application.Processes.Commands
+@using VG.CDF.Client.Application.Processes.Queries
+@using VG.CDF.Client.Infrastructure.Services.RestApi.Admin
+@using VG.CDF.Client.Pages.Administration.Parameter
+@using VG.CDF.Client.Application.Companies.Queries
+@using VG.CDF.Client.Application.Projects.Queries
+@inject IProcessService ProcessService
+@inject IProjectService ProjectService
+@inject ICompanyService CompanyService
+@inject IParameterService ParameterService
+@inject IParameterGroupService ParameterGroupService
+@inject IParameterDescriptionService ParameterDescriptionService
+@inject IModalService Modal
+
+
+<MudTable Striped="true" Bordered="true" Items="@ProcessParameters"
+          Dense="@dense"
+          Hover="@hover">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Параметры процессы</MudText>
+        <MudSpacer/>
+        <MudIconButton Icon="fa-solid fa-plus" Color="MudBlazor.Color.Primary" @onclick="@AddParametersToProcess" Title="Добавить">Добавить параметр</MudIconButton>
+    </ToolBarContent>
+    <ColGroup>
+        <col style="width: 50px"/>
+        <col style="width: 150px"/>
+        <col style="width: 150px"/>
+        <col style="width: 150px"/>
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>
+            Внешний ИД
+        </MudTh>
+        <MudTh>
+            Название RU
+        </MudTh>
+        <MudTh>
+            Название Ukr
+        </MudTh>
+        <MudTh>
+            Действия
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="name">@context.ExternalId</MudTd>
+         <MudTd DataLabel="RU">
+             @ParameterDescriptions.FirstOrDefault(c => c.ParameterId == @context.Id)?.RusDescription
+             </MudTd>
+        <MudTd DataLabel="Ukr">
+            @ParameterDescriptions.FirstOrDefault(c => c.ParameterId == @context.Id)?.UkrDescription
+        </MudTd>
+        <MudTd>
+             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteParameterFromProcess(@context))" Title="Удалить параметр"></MudIconButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+
+@code
+{
+    private bool dense = false;
+    private bool hover = true;
+    
+    public IEnumerable<ParameterDto> AllParameters { get; set; } = new List<ParameterDto>();
+    public IEnumerable<ParameterDto> ProcessParameters { get; set; } = new List<ParameterDto>();
+    public IEnumerable<ProcessDescriptionDto> ProcessDescriptions { get; set; } = new List<ProcessDescriptionDto>();
+    public IEnumerable<ParameterDescriptionDto> ParameterDescriptions { get; set; } = new List<ParameterDescriptionDto>();
+    
+
+    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public ProcessDto Process { get; set; }
+    [Parameter] public Guid CompanyId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateViewModels();
+    }
+
+    private async Task AddParametersToProcess()
+    {
+        var parameters = new ModalParameters().Add("CompanyId", CompanyId);
+        parameters.Add("AllParameters", AllParameters);
+        parameters.Add("ProcessParameters", ProcessParameters);
+        
+        var modal = Modal.Show<AddParametersToProcessModal>("Создать",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            var addParameters =(IEnumerable<ParameterDto>)(modalResult.Data);
+
+            var addCommand = new AddParametersToProcessCommand()
+            {
+                Id = Process.Id,
+                ParametersId = addParameters.Select(c=>c.Id).ToArray()
+            };
+            
+            await ProcessService.AddParametersToProcess(addCommand);
+
+        }
+        
+        modal.Close(modalResult);
+        await UpdateViewModels();
+    }
+    
+    
+    private async Task DeleteParameterFromProcess(ParameterDto parameter)
+    {
+        var parameters = new ModalParameters()
+            .Add("ProcessExternalId", Process.ExternalId)
+            .Add("ParameterExternalId", parameter.ExternalId);
+        var modal = Modal.Show<DeleteParameterFromProcessModal>("Удалить",parameters);
+        var modalResult = await modal.Result;
+
+        if (modalResult.Confirmed)
+        {
+            await ProcessService.DeleteParametersFromProcess(new DeleteParameterFromProcessCommand(){Id = Process.Id, ParameterId = parameter.Id});
+        }
+        
+        modal.Close(modalResult);
+        await UpdateViewModels();
+    }
+    
+    
+    private async Task UpdateViewModels()
+    {
+        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
+            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+        
+        ProcessParameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { ProcessId = Process.Id});
+        ProcessParameters = ProcessParameters.OrderBy(c => c.ExternalId);
+;
+    }
+
+}

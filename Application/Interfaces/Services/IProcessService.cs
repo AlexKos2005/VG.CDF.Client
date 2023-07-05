@@ -1,9 +1,13 @@
-﻿using VG.CDF.Client.Application.Dto;
+﻿using System.Threading.Tasks;
+using VG.CDF.Client.Application.Dto;
 using VG.CDF.Client.Application.Interfaces.Services.RestApi;
+using VG.CDF.Client.Application.Processes.Commands;
 
 namespace VG.CDF.Client.Application.Interfaces.Services;
 
 public interface IProcessService : IWebApiService<ProcessDto>
 {
-    
+    Task<bool> AddParametersToProcess(AddParametersToProcessCommand command);
+
+    Task<bool> DeleteParametersFromProcess(DeleteParameterFromProcessCommand command);
 }

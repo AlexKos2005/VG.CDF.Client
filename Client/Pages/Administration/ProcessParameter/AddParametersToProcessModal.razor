@@ -1,0 +1,107 @@
+﻿@using VG.CDF.Client.Infrastructure.Services.RestApi.Admin
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.Languages.Queries
+@using VG.CDF.Client.Application.ParameterDescriptions.Commands
+@using VG.CDF.Client.Application.ParameterDescriptions.Queries
+@using VG.CDF.Client.Application.Parameters.Commands
+@using VG.CDF.Client.Application.Parameters.Queries
+@using Color = MudBlazor.Color
+@inject IParameterService ParameterService
+@inject IParameterGroupService ParameterGroupService
+@inject IParameterDescriptionService ParameterDescriptionService
+@inject IModalService Modal
+
+
+<MudTable Striped="true" Bordered="true" Items="@CheckedParameters"
+          Dense="@dense"
+          Hover="@hover">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Параметры</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(CheckedParameters.All(c=>c.IsChecked == false))" 
+                   OnClick="SubmitForm">Добавить выбранные</MudButton>
+    </ToolBarContent>
+    <ColGroup>
+        <col style="width: 50px"/>
+        <col style="width: 150px"/>
+        <col style="width: 150px"/>
+        <col style="width: 150px"/>
+    </ColGroup>
+    <HeaderContent>
+    <MudTh></MudTh>
+        <MudTh>
+            Внешний ИД
+        </MudTh>
+        <MudTh>
+            Название RU
+        </MudTh>
+        <MudTh>
+            Название Ukr
+        </MudTh>
+        <MudTh>
+            Действия
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="">
+            <MudCheckBox @bind-Checked="@context.IsChecked" Color="Color.Primary"></MudCheckBox>
+        </MudTd>
+        <MudTd DataLabel="name">@context.Parameter.ExternalId</MudTd>
+        <MudTd DataLabel="RU">
+            @ParameterDescriptions.FirstOrDefault(c => c.ParameterId == @context.Parameter.Id)?.RusDescription
+        </MudTd>
+        <MudTd DataLabel="Ukr">
+            @ParameterDescriptions.FirstOrDefault(c => c.ParameterId == @context.Parameter.Id)?.UkrDescription
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+
+@code
+{
+    private bool dense = false;
+    private bool hover = true;
+    
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    
+    public IEnumerable<ParameterDto> Parameters { get; set; } = new List<ParameterDto>();
+    public List<CheckedParameterDto> CheckedParameters { get; set; } = new List<CheckedParameterDto>();
+    public IEnumerable<ParameterDescriptionDto> ParameterDescriptions { get; set; } = new List<ParameterDescriptionDto>();
+    
+    [Parameter] public Guid CompanyId { get; set; }
+    [Parameter] public IEnumerable<ParameterDto> AllParameters { get; set; } = new List<ParameterDto>();
+    [Parameter] public IEnumerable<ParameterDto> ProcessParameters { get; set; } = new List<ParameterDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateViewModels();
+    }
+
+    
+    private async Task SubmitForm()
+    {
+        await BlazoredModal.CloseAsync(ModalResult.Ok(CheckedParameters.Where(c=>c.IsChecked == true)
+            .Select(c=>c.Parameter).ToArray()));
+    }
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+   
+    
+    
+    private async Task UpdateViewModels()
+    {
+        Parameters = await ParameterService.GetList<GetParametersListQuery>(new GetParametersListQuery() { CompanyId = CompanyId });
+        Parameters = Parameters.OrderBy(c => c.ExternalId);
+        
+        ParameterDescriptions = await ParameterDescriptionService.GetList<GetParameterDescriptionsListQuery>(
+            new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+
+        foreach (var parameter in Parameters)
+        {
+            if (ProcessParameters.Select(c => c.Id).Contains(parameter.Id) == false)
+            {
+                CheckedParameters.Add( new CheckedParameterDto(){IsChecked = false, Parameter = parameter});
+            }
+        }
+    }
+
+}

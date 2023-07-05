@@ -19,11 +19,16 @@
         <col style="width: 50px"/>
         <col style="width: 150px"/>
         <col style="width: 150px"/>
+        <col style="width: 150px"/>
+        <col style="width: 150px"/>
     </ColGroup>
     <HeaderContent>
         <MudTh>
             Внешний ИД
         </MudTh>
+         <MudTh>
+              ИД
+             </MudTh>
         <MudTh>
             Название
         </MudTh>
@@ -35,14 +40,15 @@
             </MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="name">@context.ExternalId</MudTd>
+        <MudTd DataLabel="externalId">@context.ExternalId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
          <MudTd>@context.Description</MudTd>
         <MudTd>
             <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditProject(@context))" Title="Изменить"></MudIconButton>
             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteProject(@context))" Title="Удалить"></MudIconButton>
         </MudTd>
         <MudTd>
-            <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary"  @onclick="@(e=>ShowProcesses(@context))" Title="Процессы"></MudIconButton>
+            <MudIconButton Icon="fa-sharp fa-solid fa-gear" Color="MudBlazor.Color.Primary"  @onclick="@(e=>ShowProcesses(@context))" Title="Процессы"></MudIconButton>
         </MudTd>
     </RowTemplate>
 </MudTable>
@@ -129,7 +135,9 @@
     
     private async Task ShowProcesses(ProjectDto project)
     {
-        var parameters = new ModalParameters().Add("ProjectId", project.Id);
+        var parameters = new ModalParameters()
+            .Add("ProjectId", project.Id)
+            .Add("CompanyId", CompanyId);
         var modal = Modal.Show<ProcessesListModal>("",parameters);
         var modalResult = await modal.Result;
 
@@ -160,7 +168,7 @@
         {
             <MudExpansionPanel Text="@proj.Description" MaxHeight="150">
                             <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary"  Title="Изменить"></MudIconButton>
-                             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error"  Title="Удалить"></MudIconButton>
+                             <MudIconButton Icon=@Icons.Material.Outlined.DeleteByBody Color="MudBlazor.Color.Error"  Title="Удалить"></MudIconButton>
                 <MudExpansionPanels MultiExpansion="true">
                     @for (int i = 0; i < 10; i++)
                     {

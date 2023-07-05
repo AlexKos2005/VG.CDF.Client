@@ -64,4 +64,16 @@ public abstract class CrudServiceBase<T>: ICrudService<T>
 
         return response.GetFromHttpRespone();
     }
+
+    public async Task<Result> DeleteByBody(string urn, object content)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Delete, urn);
+        request.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
+        var jwt = await _localStorage.GetItemAsStringAsync("authToken");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+        
+        var response = await _httpClient.SendAsync(request);
+
+        return response.GetFromHttpRespone();
+    }
 }
