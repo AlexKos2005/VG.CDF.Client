@@ -119,7 +119,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\Administration\ConfigirationPanel" />
-    <Folder Include="Pages\Administration\Reports" />
   </ItemGroup>
 
 </Project>

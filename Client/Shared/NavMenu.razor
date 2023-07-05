@@ -17,7 +17,7 @@
                <MudNavGroup Title="@company.Name" @onclick="@(e => ShowAllProjects(@company.Id))" Match="NavLinkMatch.All" Icon="fa-solid fa-industry">
                    @foreach (var proj in Projects.Where(c => c.CompanyId == @company.Id))
                    {
-                       <MudNavLink OnClick="@(e => ShowOneProject(@proj.Id))" Title="" Match="NavLinkMatch.All" Icon="fa-solid fa-file">@proj.Description</MudNavLink>
+                       <MudNavLink  OnClick="@(e => ShowOneProject(@proj.Id))" Title="" Match="NavLinkMatch.All" Icon="fa-solid fa-file">@proj.Description</MudNavLink>
                    }
                </MudNavGroup>
            }

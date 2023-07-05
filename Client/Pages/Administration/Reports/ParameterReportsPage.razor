@@ -1,0 +1,148 @@
+﻿@page "/parameterreports/{companyid:guid}/{projectid:guid}"
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.Enums
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.ParameterDescriptions.Queries
+@using VG.CDF.Client.Application.Parameters.Queries
+@using VG.CDF.Client.Application.Processes.Queries
+
+@inject IParameterService ParameterService
+@inject IParameterDescriptionService ParameterDescriptionService
+@inject IProcessService ProcessService
+@inject IProcessDescriptionService ProcessDescriptionService
+
+<div style="display: flex;margin: 0 -5px;">
+     <div style=" flex: 1 1 auto;margin: 0 5px;"><MudSelect T="string" Value="@_currentLanguageLabel">
+            @foreach (var name in Enum.GetNames(typeof(LanguageAcronyms)))
+            {
+                <MudSelectItem T="string" Value="@name">@name</MudSelectItem>
+            }
+        </MudSelect></div>
+    <div style=" flex: 1 1 auto;margin: 0 5px;"><MudDatePicker Label="Only Calendar" @bind-Date="@StartReportDate" DisableToolbar="true" HelperText="Начальная дата отчета"/></div>
+    <div style=" flex: 1 1 auto;margin: 0 5px;"><MudDatePicker Label="Only Calendar" @bind-Date="@EndReportDate" DisableToolbar="true" HelperText="Конечная дата отчета"/></div>
+    <div style=" flex: 1 1 auto;margin: 0 5px;"><MudFab Icon="@Icons.Material.Filled.Save" aria-label="save" OnClick="(() => MakeReport())" Title="Сформировать отчет"/></div>
+
+</div>
+<MudDivider />
+
+<MudExpansionPanels>
+    @foreach (var process in ProcessParametersCheckBox.Keys)
+    {
+        string description = String.Empty;
+        var descriptions = @ProcessDescriptions.FirstOrDefault(c => c.ProcessId == process.ElementId);
+        if(descriptions == null) 
+        {description = String.Empty;}
+        else if (descriptions != null && _currentLanguageLabel == LanguageAcronyms.Rus.ToString())
+        {description = descriptions.RusDescription;}
+        else if (descriptions != null && _currentLanguageLabel == LanguageAcronyms.Ukr.ToString())
+        {description = descriptions.UkrDescription;}
+        
+        <MudExpansionPanel Text="@ProcessDescriptions.FirstOrDefault(c => c.ProcessId == process.ElementId).RusDescription">
+            <MudCheckBox Checked="@process.IsChecked" T="bool" Color="MudBlazor.Color.Primary" CheckedChanged="@(()=>DropAllChecked(process.ElementId))"></MudCheckBox>
+            @if (@ProcessParametersCheckBox.TryGetValue(process, out List<CheckedElementDto> list))
+            {
+                <div style="-webkit-column-count: 7">
+                    @foreach (var param in list.OrderBy(c => c.ElementExternalId))
+                    {
+                        <span style="white-space: nowrap;">
+                            <MudCheckBox Checked="@process.IsChecked" T="bool" Color="MudBlazor.Color.Primary" CheckedChanged="@(()=>DropChecked(process.ElementId,param.ElementId))">
+                                @ParameterDescriptions.First(c => c.ParameterId == param.ElementId).RusDescription
+                            </MudCheckBox>
+                        </span>
+                        <br/>
+                    }
+                </div>
+            }
+        </MudExpansionPanel>
+        
+    }
+</MudExpansionPanels>
+
+@code {
+    
+    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public Guid CompanyId { get; set; }
+    
+    private IDictionary<CheckedElementDto, List<CheckedElementDto>> ProcessParametersCheckBox { get; set; } = new Dictionary<CheckedElementDto, List<CheckedElementDto>>();
+    private IDictionary<Guid, List<ParameterDto>> ProcessParameters { get; set; } = new Dictionary<Guid, List<ParameterDto>>();
+    private IEnumerable<ParameterDto> Parameters { get; set; } = new List<ParameterDto>();
+    private IEnumerable<ParameterDescriptionDto> ParameterDescriptions { get; set; } = new List<ParameterDescriptionDto>();
+    private IEnumerable<ProcessDto> Processes { get; set; } = new List<ProcessDto>();
+    private IEnumerable<ProcessDescriptionDto> ProcessDescriptions { get; set; } = new List<ProcessDescriptionDto>();
+
+    private string _currentLanguageLabel = String.Empty;
+
+    public DateTime? StartReportDate { get; set; } = DateTime.Now.AddDays(-1);
+    
+    public DateTime? EndReportDate { get; set; }= DateTime.Now;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Processes = await ProcessService
+            .GetList<GetProcessesListQuery>(new GetProcessesListQuery() { ProjectId = ProjectId });
+        
+        ProcessDescriptions = await ProcessDescriptionService
+            .GetList<GetParameterDescriptionsListQuery>(new GetParameterDescriptionsListQuery() { CompanyId = CompanyId});
+
+        foreach (var process in Processes)
+        {
+            var parameters = await ParameterService
+                .GetList<GetParametersListQuery>(new GetParametersListQuery() { ProcessId = process.Id });
+            ProcessParameters.Add(process.Id,parameters.ToList());
+
+            var checkedList = new List<CheckedElementDto>();
+            foreach (var param in parameters.ToList())
+            {
+                checkedList.Add(new CheckedElementDto(){ElementId = param.Id,IsChecked = false,ElementExternalId = param.ExternalId});
+            }
+
+
+            ProcessParametersCheckBox.Add(new CheckedElementDto(){ElementId = process.Id,IsChecked = false,ElementExternalId = process.ExternalId},checkedList);
+        }
+            
+        
+        ParameterDescriptions = await ParameterDescriptionService
+            .GetList<GetParameterDescriptionsListQuery>(new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+        
+        
+    }
+
+    private void DropAllChecked(Guid processId)
+    {
+        var keyCheckedElement = ProcessParametersCheckBox.Keys.FirstOrDefault(c => c.ElementId == processId);
+        if (keyCheckedElement != null)
+        {
+            ProcessParametersCheckBox.TryGetValue(keyCheckedElement, out List<CheckedElementDto> list);
+
+            foreach (var element in list)
+            {
+                element.IsChecked = keyCheckedElement.IsChecked != true;
+            }
+        }
+        
+        keyCheckedElement.IsChecked = keyCheckedElement.IsChecked != true;
+    }
+    
+    private void DropChecked(Guid processId,Guid paramId)
+    {
+        var keyCheckedElement = ProcessParametersCheckBox.Keys.FirstOrDefault(c => c.ElementId == processId);
+        if (keyCheckedElement != null)
+        {
+            ProcessParametersCheckBox.TryGetValue(keyCheckedElement, out List<CheckedElementDto> list);
+
+            var elem = list.FirstOrDefault(c => c.ElementId == paramId);
+            if (elem != null)
+            {
+                elem.IsChecked = elem.IsChecked != true;
+            }
+           
+        }
+    }
+
+    private async Task MakeReport()
+    {
+        
+    }
+
+
+}

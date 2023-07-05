@@ -35,15 +35,15 @@
     [Parameter] public Guid CompanyId { get; set; }
 
     private IEnumerable<ProjectDto> Projects { get; set; } = new List<ProjectDto>();
-
-    protected override async Task OnInitializedAsync()
+    
+    protected override async Task OnParametersSetAsync()
     {
         Projects = await ProjectService.GetList<GetProjectsListQuery>(new GetProjectsListQuery() { CompanyId = CompanyId });
     }
 
-    protected void GoToParameterReports(Guid factoryId)
+    protected void GoToParameterReports(Guid projectId)
     {
-        //NavigationManager.NavigateTo("/factory"+"/"+ $"{factoryId}/{name}");
+        NavigationManager.NavigateTo($"/parameterreports/{CompanyId}/{projectId}");
     }
 
     protected void GoToAlarmEventReports(Guid factoryId)
