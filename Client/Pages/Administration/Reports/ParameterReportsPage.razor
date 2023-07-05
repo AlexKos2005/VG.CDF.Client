@@ -45,7 +45,7 @@
                     @foreach (var param in list.OrderBy(c => c.ElementExternalId))
                     {
                         <span style="white-space: nowrap;">
-                            <MudCheckBox Checked="@process.IsChecked" T="bool" Color="MudBlazor.Color.Primary" CheckedChanged="@(()=>DropChecked(process.ElementId,param.ElementId))">
+                            <MudCheckBox Checked="@param.IsChecked" T="bool" Color="MudBlazor.Color.Primary" CheckedChanged="@(()=>DropChecked(process.ElementId,param.ElementId))">
                                 @ParameterDescriptions.First(c => c.ParameterId == param.ElementId).RusDescription
                             </MudCheckBox>
                         </span>
