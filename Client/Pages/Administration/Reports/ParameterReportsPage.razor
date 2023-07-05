@@ -12,12 +12,14 @@
 @inject IProcessDescriptionService ProcessDescriptionService
 
 <div style="display: flex;margin: 0 -5px;">
-     <div style=" flex: 1 1 auto;margin: 0 5px;"><MudSelect T="string" Value="@_currentLanguageLabel">
+    <div style=" flex: 1 1 auto;margin: 0 5px;">
+        <MudSelect T="string" Value="@_currentLanguageLabel">
             @foreach (var name in Enum.GetNames(typeof(LanguageAcronyms)))
             {
                 <MudSelectItem T="string" Value="@name">@name</MudSelectItem>
             }
-        </MudSelect></div>
+        </MudSelect>
+    </div>
     <div style=" flex: 1 1 auto;margin: 0 5px;"><MudDatePicker Label="Only Calendar" @bind-Date="@StartReportDate" DisableToolbar="true" HelperText="Начальная дата отчета"/></div>
     <div style=" flex: 1 1 auto;margin: 0 5px;"><MudDatePicker Label="Only Calendar" @bind-Date="@EndReportDate" DisableToolbar="true" HelperText="Конечная дата отчета"/></div>
     <div style=" flex: 1 1 auto;margin: 0 5px;"><MudFab Icon="@Icons.Material.Filled.Save" aria-label="save" OnClick="(() => MakeReport())" Title="Сформировать отчет"/></div>
@@ -36,9 +38,10 @@
         {description = descriptions.RusDescription;}
         else if (descriptions != null && _currentLanguageLabel == LanguageAcronyms.Ukr.ToString())
         {description = descriptions.UkrDescription;}
-        
-        <MudExpansionPanel Text="@ProcessDescriptions.FirstOrDefault(c => c.ProcessId == process.ElementId).RusDescription">
-            <MudCheckBox Checked="@process.IsChecked" T="bool" Color="MudBlazor.Color.Primary" CheckedChanged="@(()=>DropAllChecked(process.ElementId))"></MudCheckBox>
+
+      
+        <MudExpansionPanel Text="@GetProcDescr(process.ElementId)">
+                <MudCheckBox Checked="@process.IsChecked" T="bool" Color="MudBlazor.Color.Primary" CheckedChanged="@(()=>DropAllChecked(process.ElementId))"></MudCheckBox>
             @if (@ProcessParametersCheckBox.TryGetValue(process, out List<CheckedElementDto> list))
             {
                 <div style="-webkit-column-count: 7">
@@ -136,6 +139,22 @@
                 elem.IsChecked = elem.IsChecked != true;
             }
            
+        }
+    }
+
+    private string GetProcDescr(Guid processId)
+    {
+        if (_currentLanguageLabel == LanguageAcronyms.Rus.ToString())
+        {
+            return ProcessDescriptions.FirstOrDefault(c => c.ProcessId == processId).RusDescription;
+        }
+        else if (_currentLanguageLabel == LanguageAcronyms.Ukr.ToString())
+        {
+            return ProcessDescriptions.FirstOrDefault(c => c.ProcessId == processId).UkrDescription;
+        }
+        else
+        {
+            return ProcessDescriptions.FirstOrDefault(c => c.ProcessId == processId).RusDescription;
         }
     }
 
