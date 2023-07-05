@@ -35,12 +35,12 @@
 
         private async Task ShowAllProjects(Guid companyId)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo($"/stat/projects/{companyId}");
         }
         
         private async Task ShowOneProject(Guid projectId)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo($"/");
         }
         protected override async Task OnInitializedAsync()
         {

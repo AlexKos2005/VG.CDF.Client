@@ -1,0 +1,55 @@
+﻿@page "/stat/projects/{companyid:guid}"
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.Projects.Queries
+@inject IProjectService ProjectService
+
+@inject NavigationManager NavigationManager
+<h3>Проекты</h3>
+
+
+<MudTable Items="@Projects">
+    <ColGroup>
+        <col style="width:100px;" />
+        <col style="width:100px;" />
+        <col style="width:100px;" />
+        <col style="width:50px;" />
+        <col style="width:50px;" />
+    </ColGroup>
+    <RowTemplate>
+        <MudTd>@context.Description</MudTd>
+        <MudTd><MudIconButton Icon="fas fa-file-invoice" Color="MudBlazor.Color.Primary" OnClick="(()=>GoToParameterReports(context.Id))" Title="Статистика по параметрам">Учет</MudIconButton></MudTd>
+        <MudTd><MudIconButton Icon="fas fa-exclamation-triangle" Color="MudBlazor.Color.Error" OnClick="(()=>GoToAlarmEventReports(context.Id))" Title="Статистика по авариям">Аварийные события</MudIconButton></MudTd>
+        <MudTd><MudIconButton Icon="fas fa-chart-line" Color="MudBlazor.Color.Primary" >Аналитика</MudIconButton></MudTd>
+        <MudTd>Дата последнего отчета (МСК): </MudTd>
+        <MudTd>Дата последнего подключения (МСК): </MudTd>
+    </RowTemplate>
+   
+</MudTable>
+
+
+
+
+@code {
+
+    [Parameter] public Guid CompanyId { get; set; }
+
+    private IEnumerable<ProjectDto> Projects { get; set; } = new List<ProjectDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Projects = await ProjectService.GetList<GetProjectsListQuery>(new GetProjectsListQuery() { CompanyId = CompanyId });
+    }
+
+    protected void GoToParameterReports(Guid factoryId)
+    {
+        //NavigationManager.NavigateTo("/factory"+"/"+ $"{factoryId}/{name}");
+    }
+
+    protected void GoToAlarmEventReports(Guid factoryId)
+    {
+        //NavigationManager.NavigateTo("/alarmevents" + "/" + $"{factoryId}/{name}");
+    }
+
+
+}
