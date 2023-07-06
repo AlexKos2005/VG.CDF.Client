@@ -70,6 +70,7 @@ namespace VG.CDF.Client.Extensions
             services.AddTransient<ICrudService<ProcessDescriptionDto>, CrudService<ProcessDescriptionDto>>();
 
             services.AddTransient<IParameterReportService, ParameterReportService>();
+            services.AddTransient<IAlarmEventReportService, AlarmEventReportService>();
             //services.AddScoped<ClientAuthenticationStateProvider>();
             //services.AddScoped<AuthenticationStateProvider>(provider =>
                 //provider.GetRequiredService<ClientAuthenticationStateProvider>());

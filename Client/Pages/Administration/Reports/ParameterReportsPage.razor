@@ -13,6 +13,8 @@
 @inject IProcessDescriptionService ProcessDescriptionService
 @inject IParameterReportService ParameterReportService
 
+<h3>Отчеты по параметрам</h3>
+
 <div style="display: flex;margin: 0 -5px;">
     <div style=" flex: 1 1 auto;margin: 0 5px;">
         <MudSelect T="string" Value="@CurrentLanguageLabel" TextChanged ="@((string current)=>UpdateDescr(current))">

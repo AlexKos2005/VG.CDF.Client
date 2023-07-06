@@ -1,0 +1,169 @@
+﻿@page "/alarmeventreports/{companyid:guid}/{projectid:guid}/{projectdescription}"
+@using VG.CDF.Client.Application.Interfaces.Services
+@using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Dto.Reports
+@using VG.CDF.Client.Application.Enums
+@using VG.CDF.Client.Application.ParameterDescriptions.Queries
+@using VG.CDF.Client.Application.Parameters.Queries
+@using VG.CDF.Client.Application.Processes.Queries
+
+@inject IAlarmEventReportService AlarmEventReportService
+@inject IAlarmEventDescriptionService AlarmEventDescriptionService
+@inject IProcessService ProcessService
+@inject IProcessDescriptionService ProcessDescriptionService
+
+<h3>Отчеты по аварийным событиям</h3>
+
+<div style="display: flex;margin: 0 -5px;">
+    <div style=" flex: 1 1 auto;margin: 0 5px;">
+        <MudSelect T="string" Value="@CurrentLanguageLabel" TextChanged ="@((string current)=>UpdateDescr(current))">
+            @foreach (var name in Enum.GetNames(typeof(LanguageAcronyms)))
+            {
+                if (name != LanguageAcronyms.Eng.ToString())
+                {
+                    <MudSelectItem T="string" Value="@name">@name</MudSelectItem>
+                }
+            }
+        </MudSelect>
+    </div>
+    <div style=" flex: 1 1 auto;margin: 0 5px;"><MudDatePicker Label="Only Calendar" @bind-Date="@StartReportDate" DisableToolbar="true" HelperText="Начальная дата отчета"/></div>
+    <div style=" flex: 1 1 auto;margin: 0 5px;"><MudDatePicker Label="Only Calendar" @bind-Date="@EndReportDate" DisableToolbar="true" HelperText="Конечная дата отчета"/></div>
+    <div style=" flex: 1 1 auto;margin: 0 5px;"><MudFab Icon="@Icons.Material.Filled.Save" aria-label="save" OnClick="(() => MakeReport())" Title="Сформировать отчет"/></div>
+</div>
+<MudDivider />
+
+<div style="-webkit-column-count: 7">
+ @foreach (var process in ProcessCheckBox.OrderBy(c => c.ElementExternalId))
+  {
+  <span style="white-space: nowrap;">
+    <MudCheckBox Checked="@process.IsChecked" T="bool" Color="MudBlazor.Color.Primary" CheckedChanged="@(()=>DropChecked(process.ElementId))">
+       @process.CurrentDescr
+    </MudCheckBox>
+    </span>
+     <br/>
+  }
+ </div>
+
+
+@code {
+
+    [Parameter]
+    public Guid ProjectId { get; set; }
+
+    [Parameter]
+    public string ProjectDescription { get; set; }
+
+    [Parameter]
+    public Guid CompanyId { get; set; }
+
+    private List<CheckedElementDto> ProcessCheckBox { get; set; } = new List<CheckedElementDto>();
+
+    private IEnumerable<ProcessDto> Processes { get; set; } = new List<ProcessDto>();
+    private IEnumerable<ProcessDescriptionDto> ProcessDescriptions { get; set; } = new List<ProcessDescriptionDto>();
+
+    public string CurrentLanguageLabel { get; set; } = String.Empty;
+
+    public DateTime? StartReportDate { get; set; } = DateTime.Now.AddDays(-1);
+
+    public DateTime? EndReportDate { get; set; } = DateTime.Now;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Processes = await ProcessService
+            .GetList<GetProcessesListQuery>(new GetProcessesListQuery() { ProjectId = ProjectId });
+
+        ProcessDescriptions = await ProcessDescriptionService
+            .GetList<GetParameterDescriptionsListQuery>(new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+        var checkedList = new List<CheckedElementDto>();
+        foreach (var process in Processes)
+        {
+            checkedList.Add(new CheckedElementDto() { ElementId = process.Id, IsChecked = false, ElementExternalId = process.ExternalId });
+        }
+
+        ProcessCheckBox = checkedList;
+
+
+        UpdateDescr("");
+
+    }
+
+    private void DropChecked(Guid processId)
+    {
+        var elem = ProcessCheckBox.FirstOrDefault(c => c.ElementId == processId);
+        if (elem != null)
+        {
+            elem.IsChecked = elem.IsChecked != true;
+        }
+
+    }
+
+    private void UpdateDescr(string currentLabel)
+    {
+        if (string.IsNullOrEmpty(currentLabel))
+        {
+            CurrentLanguageLabel = LanguageAcronyms.Rus.ToString();
+        }
+        else
+        {
+            CurrentLanguageLabel = currentLabel;
+        }
+
+        foreach (var process in ProcessCheckBox)
+        {
+            var descriptions = ProcessDescriptions.FirstOrDefault(c => c.ProcessId == process.ElementId);
+            if (descriptions == null)
+            {
+                process.CurrentDescr = String.Empty;
+            }
+            else if (descriptions != null && CurrentLanguageLabel == LanguageAcronyms.Rus.ToString())
+            {
+                process.CurrentDescr = descriptions.RusDescription;
+            }
+            else if (descriptions != null && CurrentLanguageLabel == LanguageAcronyms.Ukr.ToString())
+            {
+                process.CurrentDescr = descriptions.UkrDescription;
+            }
+
+        }
+
+    }
+
+    private async Task MakeReport()
+    {
+        var reportData = new AlarmEventsReportDataInfo();
+
+        reportData.ProjectId = ProjectId;
+        reportData.StartDateTime = (DateTime)StartReportDate;
+        reportData.EndDateTime = (DateTime)EndReportDate;
+        if (CurrentLanguageLabel == LanguageAcronyms.Ukr.ToString())
+        {
+            reportData.LanguageAcronymInt = (int)LanguageAcronyms.Ukr;
+        }
+        else
+        {
+            reportData.LanguageAcronymInt = (int)LanguageAcronyms.Rus;
+        }
+
+        foreach (var process in ProcessCheckBox)
+        {
+
+            var proc = new ProcessWithDescriptionsDto();
+            proc.Id = process.ElementId;
+            proc.ExternalId = process.ElementExternalId;
+            proc.IsEnabled = true;
+            proc.ProjectId = ProjectId;
+            
+            reportData.Processes.Add(proc);
+        }
+
+        var reportResult = await AlarmEventReportService.GetReport(reportData);
+
+        var fileName = $"{ProjectDescription} - Отчет по авариям {StartReportDate} - {EndReportDate}.xlsx";
+
+        await _jsRuntime.InvokeAsync<object>("SaveAsFile", fileName, Convert.ToBase64String(reportResult));
+
+    }
+
+}
+
+

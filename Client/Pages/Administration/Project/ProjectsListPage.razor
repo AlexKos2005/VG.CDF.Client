@@ -47,9 +47,10 @@
         NavigationManager.NavigateTo($"/parameterreports/{CompanyId}/{projectId}/{prj.Description}");
     }
 
-    protected void GoToAlarmEventReports(Guid factoryId)
+    protected void GoToAlarmEventReports(Guid projectId)
     {
-        //NavigationManager.NavigateTo("/alarmevents" + "/" + $"{factoryId}/{name}");
+        var prj = Projects.First(c => c.Id == projectId);
+        NavigationManager.NavigateTo($"/alarmeventreports/{CompanyId}/{projectId}/{prj.Description}");
     }
 
 
