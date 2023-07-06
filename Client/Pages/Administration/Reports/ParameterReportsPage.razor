@@ -13,10 +13,13 @@
 
 <div style="display: flex;margin: 0 -5px;">
     <div style=" flex: 1 1 auto;margin: 0 5px;">
-        <MudSelect T="string" Value="@_currentLanguageLabel">
+        <MudSelect T="string" Value="@CurrentLanguageLabel" TextChanged ="@((string current)=>UpdateDescr(current))">
             @foreach (var name in Enum.GetNames(typeof(LanguageAcronyms)))
             {
-                <MudSelectItem T="string" Value="@name">@name</MudSelectItem>
+                if (name != LanguageAcronyms.Eng.ToString())
+                {
+                    <MudSelectItem T="string" Value="@name">@name</MudSelectItem>
+                }
             }
         </MudSelect>
     </div>
@@ -30,34 +33,37 @@
 <MudExpansionPanels>
     @foreach (var process in ProcessParametersCheckBox.Keys)
     {
-        string description = String.Empty;
-        var descriptions = @ProcessDescriptions.FirstOrDefault(c => c.ProcessId == process.ElementId);
-        if(descriptions == null) 
-        {description = String.Empty;}
-        else if (descriptions != null && _currentLanguageLabel == LanguageAcronyms.Rus.ToString())
-        {description = descriptions.RusDescription;}
-        else if (descriptions != null && _currentLanguageLabel == LanguageAcronyms.Ukr.ToString())
-        {description = descriptions.UkrDescription;}
-
-      
-        <MudExpansionPanel Text="@GetProcDescr(process.ElementId)">
-                <MudCheckBox Checked="@process.IsChecked" T="bool" Color="MudBlazor.Color.Primary" CheckedChanged="@(()=>DropAllChecked(process.ElementId))"></MudCheckBox>
-            @if (@ProcessParametersCheckBox.TryGetValue(process, out List<CheckedElementDto> list))
+        @if (@ProcessParametersCheckBox.TryGetValue(process, out List<CheckedElementDto> list))
+        {
+            @if (list.Any())
             {
-                <div style="-webkit-column-count: 7">
-                    @foreach (var param in list.OrderBy(c => c.ElementExternalId))
+                <MudExpansionPanel Text="@process.CurrentDescr">
+                    <MudCheckBox Checked="@process.IsChecked" T="bool" Color="MudBlazor.Color.Success" CheckedChanged="@(() => DropAllChecked(process.ElementId))">
+                        Выбрать все
+                    </MudCheckBox>
+                    @if (@ProcessParametersCheckBox.TryGetValue(process, out List<CheckedElementDto> list))
                     {
-                        <span style="white-space: nowrap;">
-                            <MudCheckBox Checked="@param.IsChecked" T="bool" Color="MudBlazor.Color.Primary" CheckedChanged="@(()=>DropChecked(process.ElementId,param.ElementId))">
-                                @ParameterDescriptions.First(c => c.ParameterId == param.ElementId).RusDescription
-                            </MudCheckBox>
-                        </span>
-                        <br/>
+                        <div style="-webkit-column-count: 7">
+                            @foreach (var param in list.OrderBy(c => c.ElementExternalId))
+                            {
+                                <span style="white-space: nowrap;">
+                                    <MudCheckBox Checked="@param.IsChecked" T="bool" Color="MudBlazor.Color.Primary" CheckedChanged="@(()=>DropChecked(process.ElementId,param.ElementId))">
+                                        @param.CurrentDescr
+                                    </MudCheckBox>
+                                </span>
+                                <br/>
+                            }
+                        </div>
                     }
-                </div>
+                </MudExpansionPanel> 
             }
-        </MudExpansionPanel>
-        
+            else
+            {
+                <MudExpansionPanel Text="@process.CurrentDescr"></MudExpansionPanel>
+            }
+        }
+
+
     }
 </MudExpansionPanels>
 
@@ -73,7 +79,7 @@
     private IEnumerable<ProcessDto> Processes { get; set; } = new List<ProcessDto>();
     private IEnumerable<ProcessDescriptionDto> ProcessDescriptions { get; set; } = new List<ProcessDescriptionDto>();
 
-    private string _currentLanguageLabel = String.Empty;
+    public string CurrentLanguageLabel { get; set; } = String.Empty;
 
     public DateTime? StartReportDate { get; set; } = DateTime.Now.AddDays(-1);
     
@@ -106,6 +112,8 @@
         
         ParameterDescriptions = await ParameterDescriptionService
             .GetList<GetParameterDescriptionsListQuery>(new GetParameterDescriptionsListQuery() { CompanyId = CompanyId });
+        
+        UpdateDescr("");
         
         
     }
@@ -141,21 +149,44 @@
            
         }
     }
+    
 
-    private string GetProcDescr(Guid processId)
+    private void UpdateDescr(string currentLabel)
     {
-        if (_currentLanguageLabel == LanguageAcronyms.Rus.ToString())
+        if (string.IsNullOrEmpty(currentLabel))
         {
-            return ProcessDescriptions.FirstOrDefault(c => c.ProcessId == processId).RusDescription;
-        }
-        else if (_currentLanguageLabel == LanguageAcronyms.Ukr.ToString())
-        {
-            return ProcessDescriptions.FirstOrDefault(c => c.ProcessId == processId).UkrDescription;
+            CurrentLanguageLabel = LanguageAcronyms.Rus.ToString();
         }
         else
         {
-            return ProcessDescriptions.FirstOrDefault(c => c.ProcessId == processId).RusDescription;
+            CurrentLanguageLabel = currentLabel;
         }
+        
+        foreach (var process in ProcessParametersCheckBox.Keys)
+        {
+            var descriptions = ProcessDescriptions.FirstOrDefault(c => c.ProcessId == process.ElementId);
+            if(descriptions == null) 
+            {process.CurrentDescr = String.Empty;}
+            else if (descriptions != null && CurrentLanguageLabel == LanguageAcronyms.Rus.ToString())
+            {process.CurrentDescr = descriptions.RusDescription;}
+            else if (descriptions != null && CurrentLanguageLabel == LanguageAcronyms.Ukr.ToString())
+            {process.CurrentDescr = descriptions.UkrDescription;}
+
+            if (ProcessParametersCheckBox.TryGetValue(process, out List<CheckedElementDto> elements))
+            {
+                foreach (var parameter in elements)
+                {
+                   var elemDescr = ParameterDescriptions.FirstOrDefault(c => c.ParameterId == parameter.ElementId);
+                    if(elemDescr == null) 
+                    {parameter.CurrentDescr = String.Empty;}
+                    else if (elemDescr != null && CurrentLanguageLabel == LanguageAcronyms.Rus.ToString())
+                    {parameter.CurrentDescr = elemDescr.RusDescription;}
+                    else if (elemDescr != null && CurrentLanguageLabel == LanguageAcronyms.Ukr.ToString())
+                    {parameter.CurrentDescr = elemDescr.UkrDescription;}
+                }
+            }
+        }
+       
     }
 
     private async Task MakeReport()
