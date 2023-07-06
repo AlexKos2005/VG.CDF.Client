@@ -1,16 +1,20 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using VG.CDF.Client.Application.Dto;
 using VG.CDF.Client.Application.Dto.Reports;
 using VG.CDF.Client.Application.Interfaces.Services;
 using VG.CDF.Client.EndPoints;
+using VG.CDF.Client.Infrastructure.Extentions;
 
 namespace VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 
 public class ParameterReportService : IParameterReportService
 {
-    private const string _urn = "api/admin/ParameterReport";
+    const string Urn = "api/admin/ParameterReport/GetTagsLiveReport";
     private readonly HttpClient _httpClient;
     public ParameterReportService(HttpClient httpClient)
     {
@@ -18,12 +22,13 @@ public class ParameterReportService : IParameterReportService
     }
     public async Task<byte[]> GetReport(ProcessParametersReportDataInfo reportData)
     {
-        var response = await _httpClient.PostAsJsonAsync(_urn, reportData);
-
-        response.EnsureSuccessStatusCode();
         
-        var fileBytes = await response.Content.ReadAsByteArrayAsync();
+        var request = new HttpRequestMessage(HttpMethod.Post, Urn);
+        request.Content = new StringContent(JsonConvert.SerializeObject(reportData), Encoding.UTF8, "application/json");
+        
+        var response = await _httpClient.SendAsync(request);
 
-        return fileBytes;
+        return await response.Content.ReadAsByteArrayAsync();
+        
     }
 }
