@@ -20,14 +20,19 @@
     </ToolBarContent>
     <ColGroup>
         <col style="width: 50px"/>
+        <col style="width: 50px"/>
         <col style="width: 150px"/>
         <col style="width: 150px"/>
         <col style="width: 150px"/>
     </ColGroup>
     <HeaderContent>
+         <MudTh>
+             ИД
+             </MudTh>
         <MudTh>
             Внешний ИД
         </MudTh>
+
         <MudTh>
             Название RU
         </MudTh>
@@ -39,9 +44,10 @@
         </MudTh>
         <MudTh>
             Параметры процесса
-            </MudTh>
+        </MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd DataLabel="name">@context.Id</MudTd>
         <MudTd DataLabel="name">@context.ExternalId</MudTd>
          <MudTd DataLabel="RU">
              @ProcessDescriptions.FirstOrDefault(c => c.ProcessId == @context.Id)?.RusDescription
@@ -79,24 +85,32 @@
 
     private async Task AddProcess()
     {
-        var parameters = new ModalParameters().Add("ProjectId", ProjectId);
-        var modal = Modal.Show<AddProcessModal>("Создать",parameters);
-        var modalResult = await modal.Result;
 
-        if (modalResult.Confirmed)
+        var command = new CreateProcessCommand()
         {
-            var process =(ProcessDto)(modalResult.Data);
-            var command = new CreateProcessCommand()
-            {
-                ProjectId = process.ProjectId,
-                ExternalId = process.ExternalId,
-            };
-
-            await ProcessService.Create<CreateProcessCommand>(command);
-
-        }
+            ProjectId = ProjectId,
+            ExternalId = Processes.MaxBy(c=>c.ExternalId)!.ExternalId + 1,
+        };
         
-        modal.Close(modalResult);
+        await ProcessService.Create<CreateProcessCommand>(command);
+        // var parameters = new ModalParameters().Add("ProjectId", ProjectId);
+        // var modal = Modal.Show<AddProcessModal>("Создать",parameters);
+        // var modalResult = await modal.Result;
+        //
+        // if (modalResult.Confirmed)
+        // {
+        //     var process =(ProcessDto)(modalResult.Data);
+        //     var command = new CreateProcessCommand()
+        //     {
+        //         ProjectId = process.ProjectId,
+        //         ExternalId = process.ExternalId,
+        //     };
+        //
+        //     await ProcessService.Create<CreateProcessCommand>(command);
+        //
+        // }
+        //
+        // modal.Close(modalResult);
         await UpdateViewModels();
     }
     
@@ -120,7 +134,7 @@
 
             await ProcessService.Update<UpdateProcessCommand>(processCommand);
 
-            if (ProcessDescriptions.FirstOrDefault(c => c.ProcessId == processByDescriptions.ProjectId) == null)
+            if (ProcessDescriptions.FirstOrDefault(c => c.ProcessId == processByDescriptions.ProcessId) == null)
             {
                 var descriptionCommand = new CreateProcessDescriptionCommand()
                 {

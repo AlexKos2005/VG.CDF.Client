@@ -77,24 +77,33 @@
 
     private async Task AddAlarmEvent()
     {
-        var parameters = new ModalParameters().Add("CompanyId", CompanyId);
-        var modal = Modal.Show<AddAlarmEventModal>("Создать",parameters);
-        var modalResult = await modal.Result;
-
-        if (modalResult.Confirmed)
-        {
-            var parameter =(AlarmEventDto)(modalResult.Data);
-            var command = new CreateAlarmEventCommand()
-            {
-                CompanyId = CompanyId,
-                ExternalId = parameter.ExternalId,
-            };
-
-            await AlarmEventService.Create<CreateAlarmEventCommand>(command);
-
-        }
         
-        modal.Close(modalResult);
+        var command = new CreateAlarmEventCommand()
+        {
+            CompanyId = CompanyId,
+            ExternalId = AlarmEvents.MaxBy(c=>c.ExternalId)!.ExternalId + 1,
+        };
+        
+        await AlarmEventService.Create<CreateAlarmEventCommand>(command);
+        
+        // var parameters = new ModalParameters().Add("CompanyId", CompanyId);
+        // var modal = Modal.Show<AddAlarmEventModal>("Создать",parameters);
+        // var modalResult = await modal.Result;
+        //
+        // if (modalResult.Confirmed)
+        // {
+        //     var parameter =(AlarmEventDto)(modalResult.Data);
+        //     var command = new CreateAlarmEventCommand()
+        //     {
+        //         CompanyId = CompanyId,
+        //         ExternalId = parameter.ExternalId,
+        //     };
+        //
+        //     await AlarmEventService.Create<CreateAlarmEventCommand>(command);
+        //
+        // }
+        //
+        // modal.Close(modalResult);
 
         await UpdateViewModels();
     }
@@ -134,6 +143,7 @@
                 {
                     RusDescription = alarmEventByDescriptions.RusDescription,
                     UkrDescription = alarmEventByDescriptions.UkrDescription,
+                    AlarmEventId = alarmEventByDescriptions.AlarmEventId,
                     Id = AlarmEventDescriptions.First(c => c.AlarmEventId == alarmEventByDescriptions.AlarmEventId).Id
                 };
 

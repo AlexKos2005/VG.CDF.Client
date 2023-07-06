@@ -2,7 +2,7 @@
 @using VG.CDF.Client.Application.Dto
 @using Color = MudBlazor.Color
 
-<MudNumericField @bind-Value="@ExternalId" Label="Ид проекта" Variant="Variant.Outlined" Min="1"></MudNumericField>
+<MudNumericField @bind-Value="@NextExternalId" Label="Ид проекта" Variant="Variant.Outlined" Min="1" Disabled="true"></MudNumericField>
 <MudTextField @bind-Value="@ProjectName" Label="Название" Variant="Variant.Outlined" Min="1"></MudTextField>
 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
@@ -12,16 +12,21 @@
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     
     [Parameter] public Guid CompanyId { get; set; }
-    private int ExternalId { get; set; }
+    [Parameter] public int ExternalId { get; set; }
+    private int NextExternalId { get; set; }
     private string ProjectName { get; set; } = String.Empty;
-    
 
+    protected override void OnParametersSet()
+    {
+        NextExternalId = ExternalId + 1;
+    }
+    
     private async Task SubmitForm()
     {
         var parameter = new ProjectDto()
         {
             CompanyId = CompanyId,
-            ExternalId = ExternalId,
+            ExternalId = NextExternalId,
             Description = ProjectName
         };
         

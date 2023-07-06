@@ -23,12 +23,12 @@
         <col style="width: 150px"/>
     </ColGroup>
     <HeaderContent>
+         <MudTh>
+             ИД
+             </MudTh>
         <MudTh>
             Внешний ИД
         </MudTh>
-         <MudTh>
-              ИД
-             </MudTh>
         <MudTh>
             Название
         </MudTh>
@@ -37,12 +37,12 @@
         </MudTh>
         <MudTh>
             Процессы
-            </MudTh>
+        </MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="externalId">@context.ExternalId</MudTd>
         <MudTd DataLabel="Id">@context.Id</MudTd>
-         <MudTd>@context.Description</MudTd>
+        <MudTd DataLabel="externalId">@context.ExternalId</MudTd>
+        <MudTd>@context.Description</MudTd>
         <MudTd>
             <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditProject(@context))" Title="Изменить"></MudIconButton>
             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteProject(@context))" Title="Удалить"></MudIconButton>
@@ -68,7 +68,9 @@
 
     private async Task AddProject()
     {
-        var parameters = new ModalParameters().Add("CompanyId", CompanyId);
+        var parameters = new ModalParameters()
+            .Add("CompanyId", CompanyId)
+            .Add("ExternalId", Projects.Select(c=>c.ExternalId).MaxBy(c=>c));
         var modal = Modal.Show<AddProjectModal>("Создать",parameters);
         var modalResult = await modal.Result;
 
