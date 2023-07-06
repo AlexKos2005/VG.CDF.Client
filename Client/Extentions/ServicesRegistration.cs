@@ -71,9 +71,9 @@ namespace VG.CDF.Client.Extensions
 
             services.AddTransient<IParameterReportService, ParameterReportService>();
             services.AddTransient<IAlarmEventReportService, AlarmEventReportService>();
-            //services.AddScoped<ClientAuthenticationStateProvider>();
-            //services.AddScoped<AuthenticationStateProvider>(provider =>
-                //provider.GetRequiredService<ClientAuthenticationStateProvider>());
+            services.AddScoped<ClientAuthenticationStateProvider>();
+            services.AddScoped<AuthenticationStateProvider>(provider =>
+                provider.GetRequiredService<ClientAuthenticationStateProvider>());
             
             services.AddLocalization(options =>
                 {

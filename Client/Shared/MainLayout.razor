@@ -2,7 +2,7 @@
 
 @using MudBlazor
 @inherits LayoutComponentBase
-@*@inject AuthenticationStateProvider AuthenticationStateProvider*@
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
 
@@ -10,9 +10,9 @@
     <MudThemeProvider Theme="_currentTheme" />
     <MudDialogProvider />
     <MudSnackbarProvider />
-    @*<AuthorizeView>
-        <NotAuthorized>*@
-            @*<MudAppBar Elevation="4" Color="MudBlazor.Color.Primary">
+    <AuthorizeView>
+        <NotAuthorized>
+            <MudAppBar Elevation="4" Color="MudBlazor.Color.Primary">
                 <MudSpacer />
                 <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="MudBlazor.Color.Inherit" OnClick="@((e) => DarkMode())" />
             </MudAppBar>
@@ -20,16 +20,16 @@
                 <MudPaper Elevation="25" Class="pa-8" Style="width: 500px;">
                     @Body
                 </MudPaper>
-            </MudContainer>*@
-        @*</NotAuthorized>
-        <Authorized>*@
+            </MudContainer>
+        </NotAuthorized>
+        <Authorized>
             <MudLayout>
                 <MainBody OnDarkModeToggle="@DarkMode" OnRightToLeftToggle="@RightToLeftToggle">
                     @Body
                 </MainBody>
             </MudLayout>
-        @*</Authorized>
-    </AuthorizeView>*@
+        </Authorized>
+    </AuthorizeView>
 </MudRTLProvider>
 
 
