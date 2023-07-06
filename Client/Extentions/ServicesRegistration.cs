@@ -68,6 +68,8 @@ namespace VG.CDF.Client.Extensions
             services.AddTransient<IProcessDescriptionService, ProcessDescriptionService>();
             services.AddTransient<IWebApiService<ProcessDescriptionDto>, WebApiService<ProcessDescriptionDto>>();
             services.AddTransient<ICrudService<ProcessDescriptionDto>, CrudService<ProcessDescriptionDto>>();
+
+            services.AddTransient<IParameterReportService, ParameterReportService>();
             //services.AddScoped<ClientAuthenticationStateProvider>();
             //services.AddScoped<AuthenticationStateProvider>(provider =>
                 //provider.GetRequiredService<ClientAuthenticationStateProvider>());

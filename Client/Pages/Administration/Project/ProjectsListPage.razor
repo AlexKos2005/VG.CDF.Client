@@ -43,7 +43,8 @@
 
     protected void GoToParameterReports(Guid projectId)
     {
-        NavigationManager.NavigateTo($"/parameterreports/{CompanyId}/{projectId}");
+        var prj = Projects.First(c => c.Id == projectId);
+        NavigationManager.NavigateTo($"/parameterreports/{CompanyId}/{projectId}/{prj.Description}");
     }
 
     protected void GoToAlarmEventReports(Guid factoryId)

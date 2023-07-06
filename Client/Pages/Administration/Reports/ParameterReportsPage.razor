@@ -1,7 +1,8 @@
-﻿@page "/parameterreports/{companyid:guid}/{projectid:guid}"
+﻿@page "/parameterreports/{companyid:guid}/{projectid:guid}/{projectdescription}"
 @using VG.CDF.Client.Application.Interfaces.Services
 @using VG.CDF.Client.Application.Enums
 @using VG.CDF.Client.Application.Dto
+@using VG.CDF.Client.Application.Dto.Reports
 @using VG.CDF.Client.Application.ParameterDescriptions.Queries
 @using VG.CDF.Client.Application.Parameters.Queries
 @using VG.CDF.Client.Application.Processes.Queries
@@ -10,6 +11,7 @@
 @inject IParameterDescriptionService ParameterDescriptionService
 @inject IProcessService ProcessService
 @inject IProcessDescriptionService ProcessDescriptionService
+@inject IParameterReportService ParameterReportService
 
 <div style="display: flex;margin: 0 -5px;">
     <div style=" flex: 1 1 auto;margin: 0 5px;">
@@ -70,6 +72,7 @@
 @code {
     
     [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public string ProjectDescription { get; set; }
     [Parameter] public Guid CompanyId { get; set; }
     
     private IDictionary<CheckedElementDto, List<CheckedElementDto>> ProcessParametersCheckBox { get; set; } = new Dictionary<CheckedElementDto, List<CheckedElementDto>>();
@@ -191,6 +194,51 @@
 
     private async Task MakeReport()
     {
+        var reportData = new ProcessParametersReportDataInfo();
+
+        reportData.ProjectId = ProjectId;
+        reportData.StartDateTime = (DateTime)StartReportDate;
+        reportData.EndDateTime = (DateTime)EndReportDate;
+        if(CurrentLanguageLabel == LanguageAcronyms.Ukr.ToString())
+        {
+            reportData.LanguageAcronymInt = (int)LanguageAcronyms.Ukr;
+        }
+        else
+        {
+            reportData.LanguageAcronymInt = (int)LanguageAcronyms.Rus;
+        }
+
+        foreach (var process in ProcessParametersCheckBox.Keys)
+        {
+            var procParam = new ProcessParametersResponseDto();
+            var proc = new ProcessWithDescriptionsDto();
+            proc.Id = process.ElementId;
+            proc.ExternalId = process.ElementExternalId;
+            proc.IsEnabled = true;
+            proc.ProjectId = ProjectId;
+
+            if (ProcessParametersCheckBox.TryGetValue(process, out List<CheckedElementDto> list))
+            {
+                var paramList = new List<ParametersWithDescriptions>();
+                foreach (var param in list)
+                {
+                    if (param.IsChecked)
+                    {
+                        paramList.Add(new ParametersWithDescriptions(){ExternalId = param.ElementExternalId,Id = param.ElementId, IsEnabled = true});
+                    }
+                }
+
+                procParam.Parameters = paramList;
+            }
+            
+            reportData.ProcessParameters.Add(procParam);
+        }
+
+        var reportResult = await ParameterReportService.GetReport(reportData);
+        
+        var fileName = $"{ProjectDescription} - Отчет по параметрам {StartReportDate} - {EndReportDate}.xlsx";
+
+        await _jsRuntime.InvokeAsync<object>("SaveAsFile", fileName, Convert.ToBase64String(reportResult));
         
     }
 
