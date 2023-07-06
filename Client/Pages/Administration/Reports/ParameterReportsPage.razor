@@ -217,6 +217,7 @@
             proc.IsEnabled = true;
             proc.ProjectId = ProjectId;
 
+            procParam.Process = proc;
             if (ProcessParametersCheckBox.TryGetValue(process, out List<CheckedElementDto> list))
             {
                 var paramList = new List<ParametersWithDescriptions>();
