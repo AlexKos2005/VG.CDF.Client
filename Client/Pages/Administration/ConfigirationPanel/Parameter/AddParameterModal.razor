@@ -6,7 +6,7 @@
 @using Color = MudBlazor.Color
 @inject IParameterGroupService ParameterGroupService
 
-<MudNumericField @bind-Value="@ExternalId" Label="Ид параметра" Variant="Variant.Outlined" Min="1"></MudNumericField>
+<MudNumericField @bind-Value="@ExternalId" Label="Ид параметра" Variant="Variant.Outlined" Min="1" Disabled="true"></MudNumericField>
 <MudSelect T="ParameterValueType" @bind-Value="@ValueType" Label="Тип параметра" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
     <MudSelectItem Value="@(ParameterValueType.DateTime)" />
     <MudSelectItem Value="@(ParameterValueType.String)" />
@@ -26,7 +26,7 @@
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     
     [Parameter] public Guid CompanyId { get; set; }
-    private int ExternalId { get; set; }
+    [Parameter] public int ExternalId { get; set; }
     private ParameterValueType ValueType { get; set; }
     private string ParameterGroupName { get; set; } = String.Empty;
 
@@ -39,6 +39,8 @@
 
     private async Task SubmitForm()
     {
+        
+        
         var parameter = new ParameterDto()
         {
             CompanyId = CompanyId,

@@ -74,8 +74,18 @@
 
     private async Task AddParameter()
     {
-        var parameters = new ModalParameters().Add("CompanyId", CompanyId);
-        var modal = Modal.Show<AddParameterModal>("Создать",parameters);
+        int extId = 1;
+
+        if (Parameters.Any())
+        {
+            extId = Parameters.MaxBy(c => c.ExternalId)!.ExternalId + 1;
+        }
+
+        var parameters = new ModalParameters()
+            .Add("CompanyId", CompanyId)
+            .Add("ExternalId", extId);
+        
+        var modal = Modal.Show<AddParameterModal>("Создать", parameters);
         var modalResult = await modal.Result;
 
         if (modalResult.Confirmed)

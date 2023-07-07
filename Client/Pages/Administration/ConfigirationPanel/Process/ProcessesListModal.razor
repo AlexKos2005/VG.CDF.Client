@@ -85,11 +85,18 @@
 
     private async Task AddProcess()
     {
+        int extId = 1;
+
+        if (Processes.Any())
+        {
+            extId = Processes.MaxBy(c => c.ExternalId)!.ExternalId + 1;
+        }
+      
 
         var command = new CreateProcessCommand()
         {
             ProjectId = ProjectId,
-            ExternalId = Processes.MaxBy(c=>c.ExternalId)!.ExternalId + 1,
+            ExternalId = extId,
         };
         
         await ProcessService.Create<CreateProcessCommand>(command);

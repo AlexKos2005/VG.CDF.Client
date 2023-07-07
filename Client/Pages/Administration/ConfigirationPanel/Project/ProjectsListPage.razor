@@ -46,6 +46,7 @@
         <MudTd>
             <MudIconButton Icon=@Icons.Material.Outlined.Edit Color="MudBlazor.Color.Primary" @onclick="@(e=>EditProject(@context))" Title="Изменить"></MudIconButton>
             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteProject(@context))" Title="Удалить"></MudIconButton>
+             <MudIconButton Icon=@Icons.Material.Outlined.Delete Color="MudBlazor.Color.Error" @onclick="@(e=>DeleteProject(@context))" Title="Скачать конифгурацию"></MudIconButton>
         </MudTd>
         <MudTd>
             <MudIconButton Icon="fa-sharp fa-solid fa-gear" Color="MudBlazor.Color.Primary"  @onclick="@(e=>ShowProcesses(@context))" Title="Процессы"></MudIconButton>
@@ -68,9 +69,16 @@
 
     private async Task AddProject()
     {
+        int extId = 1;
+
+        if (Projects.Any())
+        {
+            extId = Projects.MaxBy(c => c.ExternalId)!.ExternalId + 1;
+        }
+
         var parameters = new ModalParameters()
             .Add("CompanyId", CompanyId)
-            .Add("ExternalId", Projects.Select(c=>c.ExternalId).MaxBy(c=>c));
+            .Add("ExternalId", extId);
         var modal = Modal.Show<AddProjectModal>("Создать",parameters);
         var modalResult = await modal.Result;
 
@@ -119,7 +127,7 @@
         await UpdateViewModels();
 
     }
-    
+
     private async Task DeleteProject(ProjectDto project)
     {
         var parameters = new ModalParameters().Add("Project", project);
@@ -133,6 +141,11 @@
         
         modal.Close(modalResult);
         await UpdateViewModels();
+    }
+    
+    private async Task ExportConfiguration()
+    {
+        
     }
     
     private async Task ShowProcesses(ProjectDto project)

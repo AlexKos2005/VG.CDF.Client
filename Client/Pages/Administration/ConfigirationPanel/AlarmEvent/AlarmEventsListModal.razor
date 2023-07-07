@@ -77,11 +77,17 @@
 
     private async Task AddAlarmEvent()
     {
+        int extId = 1;
+
+        if (AlarmEvents.Any())
+        {
+            extId = AlarmEvents.MaxBy(c => c.ExternalId)!.ExternalId + 1;
+        }
         
         var command = new CreateAlarmEventCommand()
         {
             CompanyId = CompanyId,
-            ExternalId = AlarmEvents.MaxBy(c=>c.ExternalId)!.ExternalId + 1,
+            ExternalId = extId,
         };
         
         await AlarmEventService.Create<CreateAlarmEventCommand>(command);
