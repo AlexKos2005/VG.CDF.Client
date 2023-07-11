@@ -1,4 +1,6 @@
-﻿@using VG.CDF.Client.Infrastructure.Services.RestApi.Admin
+﻿@page "/parameters/{companyid:guid}"
+
+@using VG.CDF.Client.Infrastructure.Services.RestApi.Admin
 @using VG.CDF.Client.Application.Dto
 @using VG.CDF.Client.Application.Interfaces.Services
 @using VG.CDF.Client.Application.Languages.Queries
@@ -14,7 +16,9 @@
 
 <MudTable Striped="true" Bordered="true" Items="@Parameters"
           Dense="@dense"
-          Hover="@hover">
+          Hover="@hover"
+           FixedHeader="@true"
+          Height="1000px">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Параметры</MudText>
         <MudSpacer/>

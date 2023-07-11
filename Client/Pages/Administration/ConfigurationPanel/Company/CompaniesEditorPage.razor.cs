@@ -9,10 +9,10 @@ using VG.CDF.Client.Application.Companies.Commands;
 using VG.CDF.Client.Application.Companies.Queries;
 using VG.CDF.Client.Application.Dto;
 using VG.CDF.Client.Application.Interfaces.Services;
-using VG.CDF.Client.Pages.Administration.ConfigirationPanel.AlarmEvent;
-using VG.CDF.Client.Pages.Administration.ConfigirationPanel.Parameter;
+using VG.CDF.Client.Pages.Administration.ConfigurationPanel.AlarmEvent;
+using VG.CDF.Client.Pages.Administration.ConfigurationPanel.Parameter;
 
-namespace VG.CDF.Client.Pages.Administration.ConfigirationPanel.Company;
+namespace VG.CDF.Client.Pages.Administration.ConfigurationPanel.Company;
 
 public partial class CompaniesEditorPage
 {
@@ -81,23 +81,26 @@ public partial class CompaniesEditorPage
 
     protected async Task ShowParametersList(CompanyDto companyDto)
     {
-        var parameters = new ModalParameters().Add("CompanyId", companyDto.Id);
-        var modal = Modal.Show<ParametersListModal>("Параметры",parameters);
-        var modalResult = await modal.Result;
-
-        modal.Close(modalResult);
+        // var parameters = new ModalParameters().Add("CompanyId", companyDto.Id);
+        // var modal = Modal.Show<ParametersListModal>("Параметры",parameters);
+        // var modalResult = await modal.Result;
+        //
+        // modal.Close(modalResult);
+        
+        NavigationManager.NavigateTo($"/parameters/{companyDto.Id}");
         
         Companies = await CompanyService.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery() { });
     }
     
     protected async Task ShowAlarmEventsList(CompanyDto companyDto)
     {
-        var parameters = new ModalParameters().Add("CompanyId", companyDto.Id);
-        var modal = Modal.Show<AlarmEventsListModal>("Аварийные события",parameters);
-        var modalResult = await modal.Result;
-
-        modal.Close(modalResult);
+        // var parameters = new ModalParameters().Add("CompanyId", companyDto.Id);
+        // var modal = Modal.Show<AlarmEventsListModal>("Аварийные события",parameters);
+        // var modalResult = await modal.Result;
+        //
+        // modal.Close(modalResult);
         
+        NavigationManager.NavigateTo($"/alarmevents/{companyDto.Id}");
         Companies = await CompanyService.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery() { });
     }
 }
