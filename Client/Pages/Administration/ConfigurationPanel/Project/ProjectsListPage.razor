@@ -68,9 +68,16 @@
 
     private async Task AddProject()
     {
+        int suggestExtId = 1;
+
+        if (Projects.Any())
+        {
+            suggestExtId = Projects.Select(c => c.ExternalId).MaxBy(c => c) + 1;
+        }
+        
         var parameters = new ModalParameters()
             .Add("CompanyId", CompanyId)
-            .Add("ExternalId", Projects.Select(c=>c.ExternalId).MaxBy(c=>c));
+            .Add("ExternalId", suggestExtId);
         var modal = Modal.Show<AddProjectModal>("Создать",parameters);
         var modalResult = await modal.Result;
 

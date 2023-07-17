@@ -2,7 +2,7 @@
 @using VG.CDF.Client.Application.Dto
 @using Color = MudBlazor.Color
 
-<MudNumericField @bind-Value="@NextExternalId" Label="Ид проекта" Variant="Variant.Outlined" Min="1" Disabled="true"></MudNumericField>
+<MudNumericField @bind-Value="@ExternalId" Label="Внеш. Ид проекта" Variant="Variant.Outlined" Min="1" Disabled="true"></MudNumericField>
 <MudTextField @bind-Value="@ProjectName" Label="Название" Variant="Variant.Outlined" Min="1"></MudTextField>
 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
@@ -18,7 +18,6 @@
 
     protected override void OnParametersSet()
     {
-        NextExternalId = ExternalId + 1;
     }
     
     private async Task SubmitForm()
@@ -26,7 +25,7 @@
         var parameter = new ProjectDto()
         {
             CompanyId = CompanyId,
-            ExternalId = NextExternalId,
+            ExternalId = ExternalId,
             Description = ProjectName
         };
         

@@ -79,11 +79,17 @@
 
     private async Task AddAlarmEvent()
     {
+        int suggestExtId = 1;
+
+        if (AlarmEvents.Any())
+        {
+            suggestExtId = AlarmEvents.Select(c => c.ExternalId).MaxBy(c => c) + 1;
+        }
         
         var command = new CreateAlarmEventCommand()
         {
             CompanyId = CompanyId,
-            ExternalId = AlarmEvents.MaxBy(c=>c.ExternalId)!.ExternalId + 1,
+            ExternalId = suggestExtId,
         };
         
         await AlarmEventService.Create<CreateAlarmEventCommand>(command);
@@ -123,7 +129,7 @@
             {
                 Id = parameter.Id,
                 CompanyId = CompanyId,
-                ExternalId = parameter.ExternalId,
+                ExternalId = alarmEventByDescriptions.ExternalId,
             };
 
             await AlarmEventService.Update<UpdateAlarmEventCommand>(alarmEventCommand);

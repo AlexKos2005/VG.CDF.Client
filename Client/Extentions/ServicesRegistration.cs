@@ -96,8 +96,8 @@ namespace VG.CDF.Client.Extensions
             services.AddScoped<IAuthenticateRestApiService, AuthenticateRestApiService>();
             services.AddScoped<IRegisterRestApiService, RegisterRestApiService>();
             
-            services.AddScoped(x => new HttpClient() { BaseAddress = new Uri("http://89.44.197.196:5000") });
-            //services.AddScoped(x => new HttpClient() { BaseAddress = new Uri("http://localhost:5000") });
+            //services.AddScoped(x => new HttpClient() { BaseAddress = new Uri("http://89.44.197.196:5000") });
+            services.AddScoped(x => new HttpClient() { BaseAddress = new Uri("http://localhost:5000") });
             services.AddSingleton<IDialogService, DialogService>();
             /*builder.Services.AddScoped<IUserDataRestApiService, UserDataRestApiService>();
             builder.Services.AddScoped<ITagsGroupsRestApiService, TagsGroupsRestApiService>();*/

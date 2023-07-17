@@ -5,7 +5,7 @@
 @using VG.CDF.Client.Application.ParameterGroups.Queries
 @using Color = MudBlazor.Color
 
-<MudNumericField @bind-Value="@ExternalId" Label="Ид процесса" Variant="Variant.Outlined" Min="1"></MudNumericField>
+<MudNumericField @bind-Value="@ExternalId" Label="Внеш. Ид процесса" Variant="Variant.Outlined" Min="1" Disabled="true"></MudNumericField>
 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Ok</MudButton>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel">Отмена</MudButton>
 
