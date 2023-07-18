@@ -20,13 +20,13 @@ public static class ResultExtentions
         return new Result<T>(await response.RequestMessage.Content.ReadAsStringAsync()){IsError = true};
     }
     
-    public static Result GetFromHttpRespone(this HttpResponseMessage response)
+    public static async Task<Result> GetFromHttpRespone(this HttpResponseMessage response)
     {
         if (response.IsSuccessStatusCode)
         {
             return new Result(){IsError = false};
         }
         
-        return new Result(){IsError = true};
+        return new Result(await response.RequestMessage.Content.ReadAsStringAsync()){IsError = true};
     }
 }

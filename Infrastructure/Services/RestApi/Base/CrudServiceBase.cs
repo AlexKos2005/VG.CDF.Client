@@ -63,7 +63,7 @@ public abstract class CrudServiceBase<T>: ICrudService<T>
         
         var response = await _httpClient.SendAsync(request);
 
-        return response.GetFromHttpRespone();
+        return await response.GetFromHttpRespone();
     }
 
     public async Task<Result> DeleteByBody(string urn, object content)
@@ -75,6 +75,6 @@ public abstract class CrudServiceBase<T>: ICrudService<T>
         
         var response = await _httpClient.SendAsync(request);
 
-        return response.GetFromHttpRespone();
+        return await response.GetFromHttpRespone();
     }
 }

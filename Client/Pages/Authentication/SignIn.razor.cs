@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Blazored.LocalStorage;
+using VG.CDF.Client.Application.Interfaces.Services;
 using VG.CDF.Client.Client.Models;
 using VG.CDF.Client.Dto.Authentication;
 using VG.CDF.Client.Interfaces.Services.RestApi;
@@ -27,6 +28,9 @@ namespace VG.CDF.Client.Pages.Authentication
 
         [Inject]
         protected IAuthenticateRestApiService AuthService { get; set; }
+        
+        [Inject]
+        protected IMessagePresentService MessagePresentService { get; set; }
 
         [Inject]
         protected NavigationManager NavigationManager { get; set; }
@@ -51,23 +55,18 @@ namespace VG.CDF.Client.Pages.Authentication
 
         public async Task LogInAsync()
         {
-            //var userRequest = await AuthService.LogIn(
-            //    new UserAuthenticationRequestDto() { Email = LogInData.UserEmail, Password = LogInData.Password }
-            //    );
-
-            //NavigationManager.NavigateTo("/");
-            //try
-            //{
-                var userRequest = await AuthService.LogIn(
+            var userRequest = await AuthService.LogIn(
                 new UserAuthenticationRequestDto() { Email = LogInData.UserEmail, Password = LogInData.Password }
                 );
 
-                NavigationManager.NavigateTo("/");
-            //}
-            //catch(Exception e)
-            //{
-
-            //}
+            if (userRequest == null)
+            {
+                MessagePresentService.PresentWarning("Пользователь не найден!");
+                return;
+            }
+            
+            NavigationManager.NavigateTo("/");
+           
         }
 
         private void TogglePasswordVisibility()

@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using VG.CDF.Client.Application.Interfaces.Services;
 using VG.CDF.Client.Dto.Authentication;
 using VG.CDF.Client.EndPoints;
 using VG.CDF.Client.Extentions;
@@ -23,25 +24,36 @@ namespace VG.CDF.Client.Infrastructure.Services.RestApi;
         private readonly JsonSerializerOptions _options;
         private readonly AuthenticationStateProvider _authStateProvider;
         private readonly ILocalStorageService _localStorage;
-        public AuthenticateRestApiService(HttpClient httpClient, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage)
+        private readonly IMessagePresentService _messagePresentService;
+        public AuthenticateRestApiService(HttpClient httpClient, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage, IMessagePresentService messagePresentService)
         {
             _httpClient = httpClient;
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             _authStateProvider = authStateProvider;
             _localStorage = localStorage;
+            _messagePresentService = messagePresentService;
         }
 
-        public async Task<AuthenticationResponseDto> LogIn(UserAuthenticationRequestDto userRequestDto)
+        public async Task<AuthenticationResponseDto?> LogIn(UserAuthenticationRequestDto userRequestDto)
         {
-            var tt = AuthenticationEndPoints.Authenticate;
-            var response = await _httpClient.PostAsJsonAsync(AuthenticationEndPoints.Authenticate2, userRequestDto);
-            var data = await response.ToResult<AuthenticationResponseDto>();
-            await _localStorage.SetItemAsync("authToken", data.JwtToken);
-            ((ClientAuthenticationStateProvider)_authStateProvider).NotifyUserAuthentication(userRequestDto.Email);
+            try
+            {
+                var tt = AuthenticationEndPoints.Authenticate;
+                var response = await _httpClient.PostAsJsonAsync(AuthenticationEndPoints.Authenticate2, userRequestDto);
+                var data = await response.ToResult<AuthenticationResponseDto>();
+                await _localStorage.SetItemAsync("authToken", data.JwtToken);
+                ((ClientAuthenticationStateProvider)_authStateProvider).NotifyUserAuthentication(userRequestDto.Email);
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", data.JwtToken);
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", data.JwtToken);
 
-            return data;
+                return data;
+            }
+            catch
+            {
+                _messagePresentService.PresentError("Ошибка авторизации");
+                return null;
+            }
+           
         }
 
         public async Task Logout()
