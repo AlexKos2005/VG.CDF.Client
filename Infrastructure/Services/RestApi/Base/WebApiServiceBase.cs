@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VG.CDF.Client.Application.Dto;
+using VG.CDF.Client.Application.Interfaces.Services;
 using VG.CDF.Client.Application.Interfaces.Services.RestApi;
 using VG.CDF.Client.Application.Wrappers;
 
@@ -12,9 +13,11 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
 {
     protected string Urn { get; set; }
     protected ICrudService<T> _crudService;
-    public WebApiServiceBase(ICrudService<T> crudService)
+    protected readonly IMessagePresentService _messagePresentService;
+    public WebApiServiceBase(ICrudService<T> crudService, IMessagePresentService messagePresentService)
     {
         _crudService = crudService;
+        _messagePresentService = messagePresentService;
     }
     
     public virtual async Task<IEnumerable<T>> GetList<Tg>(Tg entity, string? urnPostFix = null)
@@ -23,6 +26,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
 
         if (result.IsError)
         {
+            _messagePresentService.PresentError($"Error:{result.Message}");
             return Enumerable.Empty<T>();
         }
 
@@ -35,6 +39,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
 
         if (result.IsError)
         {
+            _messagePresentService.PresentError($"Error:{result.Message}");
             return default(T);
         }
 
@@ -47,6 +52,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
 
         if (result.IsError)
         {
+            _messagePresentService.PresentError($"Error:{result.Message}");
             return default(T);
         }
 
@@ -59,6 +65,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
 
         if (result.IsError)
         {
+            _messagePresentService.PresentError($"Error:{result.Message}");
             return false;
         }
 
@@ -71,6 +78,7 @@ public abstract class WebApiServiceBase<T> : IWebApiService<T> where T: EntityBa
 
         if (result.IsError)
         {
+            _messagePresentService.PresentError($"Error:{result.Message}");
             return false;
         }
 

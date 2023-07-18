@@ -13,7 +13,8 @@ public class ProcessService : WebApiServiceBase<ProcessDto>,IProcessService
 {
     protected const string _urn = "api/admin/Process/";
 
-    public ProcessService(ICrudService<ProcessDto> crudService) : base(crudService)
+    public ProcessService(ICrudService<ProcessDto> crudService, IMessagePresentService messagePresentService) 
+        : base(crudService, messagePresentService)
     {
         base.Urn = _urn;
     }

@@ -11,10 +11,12 @@ public class AlarmEventReportService : IAlarmEventReportService
 {
     const string Urn = "api/admin/AlarmEventReport/GetAlarmEventsLiveReport";
     private readonly HttpClient _httpClient;
+    private readonly IMessagePresentService _messagePresentService;
 
-    public AlarmEventReportService(HttpClient httpClient)
+    public AlarmEventReportService(HttpClient httpClient, IMessagePresentService messagePresentService)
     {
         _httpClient = httpClient;
+        _messagePresentService = messagePresentService;
     }
 
     public async Task<byte[]> GetReport(AlarmEventsReportDataInfo reportData)

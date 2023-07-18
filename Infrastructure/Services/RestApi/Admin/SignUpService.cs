@@ -11,7 +11,8 @@ public class SignUpService : WebApiServiceBase<UserDto>,ISignUpService
 {
     protected const string _urn = "api/SignUp/";
 
-    public SignUpService(ICrudService<UserDto> crudService) : base(crudService)
+    public SignUpService(ICrudService<UserDto> crudService, IMessagePresentService messagePresentService) 
+        : base(crudService, messagePresentService)
     {
         base.Urn = _urn;
     }

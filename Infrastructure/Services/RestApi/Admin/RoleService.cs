@@ -11,7 +11,8 @@ public class RoleService : WebApiServiceBase<RoleDto>,IRoleService
 {
     protected const string _urn = "api/admin/Role/";
 
-    public RoleService(ICrudService<RoleDto> crudService) : base(crudService)
+    public RoleService(ICrudService<RoleDto> crudService, IMessagePresentService messagePresentService) 
+        : base(crudService, messagePresentService)
     {
         base.Urn = _urn;
     }

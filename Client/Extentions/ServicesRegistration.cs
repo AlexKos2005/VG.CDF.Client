@@ -18,6 +18,7 @@ using VG.CDF.Client.Application.Interfaces.Services.RestApi;
 using VG.CDF.Client.Infrastructure.Services.RestApi;
 using VG.CDF.Client.Infrastructure.Services.RestApi.Admin;
 using VG.CDF.Client.Interfaces.Services.RestApi;
+using VG.CDF.Client.Services;
 using VG.CDF.Client.Services.Authentication;
 using VG.CDF.Client.Shared.Constants.Permission;
 
@@ -96,8 +97,8 @@ namespace VG.CDF.Client.Extensions
             services.AddScoped<IAuthenticateRestApiService, AuthenticateRestApiService>();
             services.AddScoped<IRegisterRestApiService, RegisterRestApiService>();
             
-            services.AddScoped(x => new HttpClient() { BaseAddress = new Uri("http://89.44.197.196:5000") });
-            //services.AddScoped(x => new HttpClient() { BaseAddress = new Uri("http://localhost:5000") });
+            //services.AddScoped(x => new HttpClient() { BaseAddress = new Uri("http://89.44.197.196:5000") });
+            services.AddScoped(x => new HttpClient() { BaseAddress = new Uri("http://localhost:5000") });
             services.AddSingleton<IDialogService, DialogService>();
             /*builder.Services.AddScoped<IUserDataRestApiService, UserDataRestApiService>();
             builder.Services.AddScoped<ITagsGroupsRestApiService, TagsGroupsRestApiService>();*/
@@ -107,6 +108,7 @@ namespace VG.CDF.Client.Extensions
             var styleProvider =new BootstrapStyleProvider();
             services.AddSingleton<IClassProvider>(classProvider);
             services.AddSingleton<IStyleProvider>(styleProvider);
+            services.AddScoped<IMessagePresentService, MessagePresentService>();
         }
         
         private static void RegisterPermissionClaims(AuthorizationOptions options)

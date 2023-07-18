@@ -11,7 +11,8 @@ public class ParameterDescriptionService : WebApiServiceBase<ParameterDescriptio
 {
     protected const string _urn = "api/admin/ParameterDescription/";
 
-    public ParameterDescriptionService(ICrudService<ParameterDescriptionDto> crudService) : base(crudService)
+    public ParameterDescriptionService(ICrudService<ParameterDescriptionDto> crudService, IMessagePresentService messagePresentService) 
+        : base(crudService, messagePresentService)
     {
         base.Urn = _urn;
     }

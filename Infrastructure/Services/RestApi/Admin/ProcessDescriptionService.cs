@@ -11,7 +11,8 @@ public class ProcessDescriptionService : WebApiServiceBase<ProcessDescriptionDto
 {
     protected const string _urn = "api/admin/ProcessDescription/";
 
-    public ProcessDescriptionService(ICrudService<ProcessDescriptionDto> crudService) : base(crudService)
+    public ProcessDescriptionService(ICrudService<ProcessDescriptionDto> crudService, IMessagePresentService messagePresentService) 
+        : base(crudService, messagePresentService)
     {
         base.Urn = _urn;
     }

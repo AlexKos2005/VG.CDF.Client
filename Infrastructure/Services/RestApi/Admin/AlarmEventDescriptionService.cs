@@ -11,7 +11,10 @@ public class AlarmEventDescriptionService : WebApiServiceBase<AlarmEventDescript
 {
     protected const string _urn = "api/admin/AlarmEventDescription/";
 
-    public AlarmEventDescriptionService(ICrudService<AlarmEventDescriptionDto> crudService) : base(crudService)
+    public AlarmEventDescriptionService(
+        ICrudService<AlarmEventDescriptionDto> crudService,
+        IMessagePresentService messagePresentService
+        ) : base(crudService,messagePresentService)
     {
         base.Urn = _urn;
     }

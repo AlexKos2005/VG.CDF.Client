@@ -6,12 +6,15 @@ using Moq;
 using VG.CDF.Client.Application.Companies.Commands;
 using VG.CDF.Client.Application.Companies.Queries;
 using VG.CDF.Client.Application.Dto;
+using VG.CDF.Client.Application.Interfaces.Services;
 using VG.CDF.Client.Infrastructure.Services.RestApi;
 
 Console.WriteLine("Hello, World!");
 string url = "api/admin/company/";
 
 var lcStoreMoq = new Mock<ILocalStorageService>();
+
+var messPresenterMoq = new Mock<IMessagePresentService>();
 
 lcStoreMoq.Setup(c => c.GetItemAsStringAsync("authToken",null))
     .Returns(()=> new ValueTask<string>("apikey"));
@@ -22,7 +25,7 @@ using (var httpClient = new HttpClient())
 {
     httpClient.BaseAddress = new Uri("http://localhost:5000/");
     var crudService = new CrudService<CompanyDto>(httpClient, lcStoreMoq.Object);
-    var service = new CompanyService(crudService);
+    var service = new CompanyService(crudService,messPresenterMoq.Object);
 
     var res = await service.GetList<GetCompaniesListQuery>(new GetCompaniesListQuery() { Name = "InitComp2" });
 

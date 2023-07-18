@@ -16,9 +16,11 @@ public class ParameterReportService : IParameterReportService
 {
     const string Urn = "api/admin/ParameterReport/GetParameterValuesReport";
     private readonly HttpClient _httpClient;
-    public ParameterReportService(HttpClient httpClient)
+    private readonly IMessagePresentService _messagePresentService;
+    public ParameterReportService(HttpClient httpClient, IMessagePresentService messagePresentService)
     {
         _httpClient = httpClient;
+        _messagePresentService = messagePresentService;
     }
     public async Task<byte[]> GetReport(ProcessParametersReportDataInfo reportData)
     {

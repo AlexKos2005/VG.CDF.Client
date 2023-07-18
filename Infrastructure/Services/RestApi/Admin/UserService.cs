@@ -11,7 +11,8 @@ public class UserService : WebApiServiceBase<UserDto>,IUserService
 {
     protected const string _urn = "api/admin/User/";
 
-    public UserService(ICrudService<UserDto> crudService) : base(crudService)
+    public UserService(ICrudService<UserDto> crudService, IMessagePresentService messagePresentService) 
+        : base(crudService, messagePresentService)
     {
         base.Urn = _urn;
     }

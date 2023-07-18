@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using VG.CDF.Client.Application.Wrappers;
 
@@ -16,7 +17,7 @@ public static class ResultExtentions
             return new Result<T>(await response.Content.ReadFromJsonAsync<T>(),response.StatusCode.ToString()){IsError = false};
         }
         
-        return new Result<T>(response.StatusCode.ToString()){IsError = true};
+        return new Result<T>(await response.RequestMessage.Content.ReadAsStringAsync()){IsError = true};
     }
     
     public static Result GetFromHttpRespone(this HttpResponseMessage response)

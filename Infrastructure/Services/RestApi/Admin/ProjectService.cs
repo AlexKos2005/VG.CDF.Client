@@ -11,7 +11,8 @@ public class ProjectService : WebApiServiceBase<ProjectDto>,IProjectService
 {
     protected const string _urn = "api/admin/Project/";
 
-    public ProjectService(ICrudService<ProjectDto> crudService) : base(crudService)
+    public ProjectService(ICrudService<ProjectDto> crudService, IMessagePresentService messagePresentService) 
+        : base(crudService, messagePresentService)
     {
         base.Urn = _urn;
     }

@@ -11,7 +11,8 @@ public class ParameterGroupService : WebApiServiceBase<ParameterGroupDto>,IParam
 {
     protected const string _urn = "api/admin/ParameterGroup/";
 
-    public ParameterGroupService(ICrudService<ParameterGroupDto> crudService) : base(crudService)
+    public ParameterGroupService(ICrudService<ParameterGroupDto> crudService, IMessagePresentService messagePresentService) 
+        : base(crudService, messagePresentService)
     {
         base.Urn = _urn;
     }

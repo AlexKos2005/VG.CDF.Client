@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using Newtonsoft.Json;
+using VG.CDF.Client.Application.Interfaces.Services;
 using VG.CDF.Client.Application.Interfaces.Services.RestApi;
 using VG.CDF.Client.Application.Wrappers;
 using VG.CDF.Client.Infrastructure.Extentions;
@@ -28,7 +29,7 @@ public abstract class CrudServiceBase<T>: ICrudService<T>
         var jwt = await _localStorage.GetItemAsStringAsync("authToken");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
         var response = await _httpClient.SendAsync(request);
-
+        
         return await response.GetFromHttpRespone<T>();
     }
 

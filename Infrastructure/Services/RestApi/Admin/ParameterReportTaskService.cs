@@ -11,7 +11,8 @@ public class ParameterReportTaskService : WebApiServiceBase<ParameterReportTaskD
 {
     protected const string _urn = "api/admin/ParameterReportTask/";
 
-    public ParameterReportTaskService(ICrudService<ParameterReportTaskDto> crudService) : base(crudService)
+    public ParameterReportTaskService(ICrudService<ParameterReportTaskDto> crudService, IMessagePresentService messagePresentService) 
+        : base(crudService,messagePresentService)
     {
         base.Urn = _urn;
     }
